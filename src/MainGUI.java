@@ -1,10 +1,18 @@
+import javafx.animation.RotateTransition;
 import javafx.application.Application;
 import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Arc;
+import javafx.scene.shape.ArcType;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Shape;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class MainGUI extends Application {
     public static void main(String[] args) {
@@ -28,6 +36,7 @@ public class MainGUI extends Application {
         btn1.setStyle("-fx-font-size: 1.5em; ");
         btn1.setOnAction(e->{
             System.out.println("Pressed button 1 in main menu");
+            CircleObstacle(stage,scene);
         });
 
         Button btn2 = new Button("Resume");
@@ -119,6 +128,99 @@ public class MainGUI extends Application {
         parent.add(btn2, 1, 2);
         parent.add(btn3,1,3);
 
+        stage.setScene(scene);
+        stage.show();
+    }
+    public void CircleObstacle(Stage stage,Scene scene){
+        Arc arc1=new Arc();
+        Arc arc2=new Arc();
+        Arc arc3=new Arc();
+        Arc arc4=new Arc();
+        arc1.setType(ArcType.ROUND);
+        arc2.setType(ArcType.ROUND);
+        arc3.setType(ArcType.ROUND);
+        arc4.setType(ArcType.ROUND);
+
+        arc1.setCenterX(150.0f);
+        arc1.setCenterY(250.0f);
+        arc2.setCenterX(150.0f);
+        arc2.setCenterY(250.0f);
+        arc3.setCenterX(150.0f);
+        arc3.setCenterY(250.0f);
+        arc4.setCenterX(150.0f);
+        arc4.setCenterY(250.0f);
+
+        arc1.setRadiusX(150.0f);
+        arc1.setRadiusY(150.0f);
+        arc2.setRadiusX(150.0f);
+        arc2.setRadiusY(150.0f);
+        arc3.setRadiusX(150.0f);
+        arc3.setRadiusY(150.0f);
+        arc4.setRadiusX(150.0f);
+        arc4.setRadiusY(150.0f);
+
+        arc1.setStartAngle(0.0f);
+        arc2.setStartAngle(90.0f);
+        arc3.setStartAngle(180.0f);
+        arc4.setStartAngle(270.0f);
+
+        arc1.setLength(100.0f);
+        arc2.setLength(100.0f);
+        arc3.setLength(100.0f);
+        arc4.setLength(100.0f);
+
+        Circle circ1=new Circle(150.0f,250.0f,135.0f);
+        Circle circ2=new Circle(150.0f,250.0f,135.0f);
+        Circle circ3=new Circle(150.0f,250.0f,135.0f);
+        Circle circ4=new Circle(150.0f,250.0f,135.0f);
+
+        Shape clip1= Shape.subtract(arc1,circ1);
+        clip1.setFill(Color.BLUE);
+        Shape clip2= Shape.subtract(arc2,circ2);
+        clip2.setFill(Color.RED);
+        Shape clip3= Shape.subtract(arc3,circ3);
+        clip3.setFill(Color.YELLOW);
+        Shape clip4= Shape.subtract(arc4,circ4);
+        clip4.setFill(Color.DARKVIOLET);
+
+        Group root=new Group(clip1,clip2,clip3,clip4);
+
+//        Scene scene=new Scene(root,600,600);
+        RotateTransition rotateTransition = new RotateTransition();
+        rotateTransition.setNode(root);
+        rotateTransition.setDuration(Duration.millis(3000));
+        rotateTransition.setByAngle(360);
+        rotateTransition.setCycleCount(50);
+        rotateTransition.setAutoReverse(false);
+        rotateTransition.play();
+
+        Button btn1 = new Button("Pause");
+        btn1.setMinSize(100, 25);
+        btn1.setStyle("-fx-font-size: 1.5em; ");
+        btn1.setOnAction(e->{
+            System.out.println("Pause the game");
+        });
+        Button btn2 = new Button("Exit");
+        btn2.setMinSize(100, 25);
+        btn2.setStyle("-fx-font-size: 1.5em; ");
+        btn2.setOnAction(e->{
+            System.out.println("exit");
+        });
+//        root.setLayoutX(250);
+//        root.setLayoutY(70);
+
+        BorderPane border=new BorderPane();
+        HBox hor=new HBox(btn1,btn2);
+        VBox ver=new VBox(btn1,btn2);
+        ver.setSpacing(10);
+        ver.setAlignment(Pos.TOP_RIGHT);
+        hor.setSpacing(500);
+       border.setTop(ver);
+       border.setCenter(root);
+
+       border.setStyle("-fx-background-color: #000000;");
+        stage.setTitle("Play Game");
+        scene.setRoot(border);
         stage.setScene(scene);
         stage.show();
     }
