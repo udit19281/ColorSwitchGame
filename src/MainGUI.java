@@ -53,7 +53,7 @@ public class MainGUI extends Application {
         btn2.setStyle("-fx-font-size: 1.5em; ");
         btn2.setOnAction(e->{
             System.out.println("Pressed button 2 in main menu");
-            PauseGameGUI(stage,scene);
+            SavedGames(stage,scene);
         });
 
         Button btn3 = new Button("Exit");
@@ -76,7 +76,7 @@ public class MainGUI extends Application {
         stage.setTitle("Pause Menu");
         GridPane parent = new GridPane();
         parent.setAlignment(Pos.CENTER);
-        BackgroundImage image = new BackgroundImage(new Image("colorswitch.png", 800, 700, false, true), BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
+        BackgroundImage image = new BackgroundImage(new Image("colorswitch.png", 560, 600, false, true), BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
         parent.setBackground(new Background(image));
 
         scene.setRoot(parent);
@@ -102,6 +102,45 @@ public class MainGUI extends Application {
         stage.setScene(scene);
         stage.show();
     }
+
+    public void SavedGames(Stage stage,Scene scene){
+        stage.setTitle("Saved Games List");
+        GridPane parent = new GridPane();
+        parent.setAlignment(Pos.CENTER);
+        BackgroundImage image = new BackgroundImage(new Image("colorswitch.png", 560, 600, false, true), BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
+        parent.setBackground(new Background(image));
+
+        scene.setRoot(parent);
+
+
+        Text text = new Text();
+        text.setText("SELECT GAME");
+        text.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 25));
+        text.setFill(Color.WHITE);
+
+        Button btn1 = new Button("Game 1");
+        btn1.setMinSize(150, 25);
+        btn1.setStyle("-fx-font-size: 1.5em; ");
+        btn1.setOnAction(e->{
+            System.out.println("Pressed button 1 in pause menu");
+        });
+
+        Button btn2 = new Button("Game 2");
+        btn2.setMinSize(150, 25);
+        btn2.setStyle("-fx-font-size: 1.5em; ");
+        btn2.setOnAction(e->{
+            System.out.println("Pressed button 2 in pause menu");
+        });
+
+        parent.setVgap(5);
+        parent.add(text, 1, 0);
+        parent.add(btn1, 1, 4);
+        parent.add(btn2, 1, 6);
+
+        stage.setScene(scene);
+        stage.show();
+    }
+
     public void ExitGUI(Stage stage,Scene scene){
         stage.setTitle("Exit Menu");
         GridPane parent = new GridPane();
@@ -130,6 +169,7 @@ public class MainGUI extends Application {
         btn3.setStyle("-fx-font-size: 1.5em; ");
         btn3.setOnAction(e->{
             System.out.println("Pressed button 3 in exit menu");
+            MainMenuGUI(stage);
         });
 
         parent.setVgap(5);
@@ -228,12 +268,14 @@ public class MainGUI extends Application {
         btn1.setStyle("-fx-font-size: 1.5em; ");
         btn1.setOnAction(e->{
             System.out.println("Pause the game");
+            PauseGameGUI(stage,scene);
         });
         Button btn2 = new Button("Exit");
         btn2.setMinSize(100, 25);
         btn2.setStyle("-fx-font-size: 1.5em; ");
         btn2.setOnAction(e->{
             System.out.println("exit");
+            ExitGUI(stage,scene);
         });
 //        root.setLayoutX(250);
 //        root.setLayoutY(70);
