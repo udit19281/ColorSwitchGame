@@ -23,8 +23,8 @@ public class Square extends Application {
         rectangle.setHeight(200.0f);
         rectangle.setFill(Color.RED);
 
-        rectangle2.setX(40.0f);
-        rectangle2.setY(290.0f);
+        rectangle2.setX(350.0f);
+        rectangle2.setY(200.0f);
         rectangle2.setWidth(15.0f);
         rectangle2.setHeight(200.0f);
         rectangle2.setFill(Color.YELLOW);
@@ -36,13 +36,21 @@ public class Square extends Application {
         rectangle3.setFill(Color.VIOLET);
 
         rectangle4.setX(165.0f);
-        rectangle4.setY(200.0f);
+        rectangle4.setY(385.0f);
         rectangle4.setWidth(200.0f);
         rectangle4.setHeight(15.0f);
         rectangle4.setFill(Color.GREEN);
 
 
         Group root = new Group(rectangle,rectangle2,rectangle3,rectangle4);
+        RotateTransition rotateTransition = new RotateTransition();
+        rotateTransition.setNode(root);
+        rotateTransition.setDuration(Duration.millis(3000));
+        rotateTransition.setByAngle(360);
+        rotateTransition.setCycleCount(50);
+        rotateTransition.setAutoReverse(false);
+        rotateTransition.play();
+
         Scene scene = new Scene(root, 500, 600);
         stage.setTitle("Drawing a Rectangle");
 

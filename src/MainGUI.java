@@ -8,10 +8,7 @@ import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Arc;
-import javafx.scene.shape.ArcType;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Shape;
+import javafx.scene.shape.*;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.scene.text.Font;
@@ -145,7 +142,7 @@ public class MainGUI extends Application {
         stage.setTitle("Exit Menu");
         GridPane parent = new GridPane();
         parent.setAlignment(Pos.CENTER);
-        BackgroundImage image = new BackgroundImage(new Image("colorswitch.png", 800, 700, false, true), BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
+        BackgroundImage image = new BackgroundImage(new Image("colorswitch.png", 560, 600, false, true), BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
         parent.setBackground(new Background(image));
 
         scene.setRoot(parent);
@@ -232,7 +229,15 @@ public class MainGUI extends Application {
         Shape clip4= Shape.subtract(arc4,circ4);
         clip4.setFill(Color.DARKVIOLET);
 
-        Group root=new Group(clip1,clip2,clip3,clip4);
+        Image image = new Image("star.png");
+        ImageView imageView = new ImageView(image);
+        imageView.setFitHeight(80);
+        imageView.setFitWidth(80);
+        imageView.setX(110);
+        imageView.setY(200);
+        imageView.setPreserveRatio(true);
+
+        Group root=new Group(clip1,clip2,clip3,clip4,imageView);
 
 //        Scene scene=new Scene(root,600,600);
         RotateTransition rotateTransition = new RotateTransition();
@@ -242,6 +247,57 @@ public class MainGUI extends Application {
         rotateTransition.setCycleCount(50);
         rotateTransition.setAutoReverse(false);
         rotateTransition.play();
+
+        return root;
+    }
+
+    public Group SquareObstacle() {
+        Rectangle rectangle = new Rectangle();
+        Rectangle rectangle2 = new Rectangle();
+        Rectangle rectangle3 = new Rectangle();
+        Rectangle rectangle4 = new Rectangle();
+
+        rectangle.setX(150.0f);
+        rectangle.setY(200.0f);
+        rectangle.setWidth(15.0f);
+        rectangle.setHeight(200.0f);
+        rectangle.setFill(Color.RED);
+
+        rectangle2.setX(350.0f);
+        rectangle2.setY(200.0f);
+        rectangle2.setWidth(15.0f);
+        rectangle2.setHeight(200.0f);
+        rectangle2.setFill(Color.YELLOW);
+
+        rectangle3.setX(150.0f);
+        rectangle3.setY(200.0f);
+        rectangle3.setWidth(200.0f);
+        rectangle3.setHeight(15.0f);
+        rectangle3.setFill(Color.VIOLET);
+
+        rectangle4.setX(165.0f);
+        rectangle4.setY(385.0f);
+        rectangle4.setWidth(200.0f);
+        rectangle4.setHeight(15.0f);
+        rectangle4.setFill(Color.GREEN);
+
+        Image image = new Image("star.png");
+        ImageView imageView = new ImageView(image);
+        imageView.setFitHeight(60);
+        imageView.setFitWidth(60);
+        imageView.setX(230);
+        imageView.setY(270);
+        imageView.setPreserveRatio(true);
+
+        Group root = new Group(rectangle,rectangle2,rectangle3,rectangle4);
+        RotateTransition rotateTransition = new RotateTransition();
+        rotateTransition.setNode(root);
+        rotateTransition.setDuration(Duration.millis(3000));
+        rotateTransition.setByAngle(360);
+        rotateTransition.setCycleCount(50);
+        rotateTransition.setAutoReverse(false);
+        rotateTransition.play();
+        root.getChildren().add(imageView);
 
         return root;
     }
@@ -255,13 +311,6 @@ public class MainGUI extends Application {
         text.setText("SCORE: 0  ");
         text.setFill(Color.WHITE);
 
-        Image image = new Image("star.png");
-        ImageView imageView = new ImageView(image);
-        imageView.setFitHeight(80);
-        imageView.setFitWidth(80);
-        imageView.setX(110);
-        imageView.setY(200);
-        imageView.setPreserveRatio(true);
 
         Button btn1 = new Button("Pause");
         btn1.setMinSize(100, 25);
@@ -279,7 +328,7 @@ public class MainGUI extends Application {
         });
 //        root.setLayoutX(250);
 //        root.setLayoutY(70);
-        root.getChildren().add(imageView);
+
         BorderPane border=new BorderPane();
         VBox ver=new VBox(btn1,btn2);
         ver.setSpacing(10);
