@@ -1,5 +1,6 @@
 import javafx.animation.RotateTransition;
 import javafx.application.Application;
+import javafx.scene.image.ImageView;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -13,6 +14,10 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Shape;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 
 public class MainGUI extends Application {
     public static void main(String[] args) {
@@ -22,12 +27,15 @@ public class MainGUI extends Application {
     public void start(Stage stage) throws Exception {
         MainMenuGUI(stage);
     }
-    public void MainMenuGUI(Stage stage){
+    public void MainMenuGUI(Stage stage) {
         stage.setTitle("Color Switch");
+        stage.setHeight(660);
+        stage.setWidth(600);
+        stage.setResizable(false);
 
         GridPane parent = new GridPane();
         parent.setAlignment(Pos.CENTER);
-        BackgroundImage image = new BackgroundImage(new Image("colorswitch.png", 800, 700, false, true), BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
+        BackgroundImage image = new BackgroundImage(new Image("colorswitch.png", 560, 600, false, true), BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
         parent.setBackground(new Background(image));
         Scene scene = new Scene(parent, 800, 700);
 
@@ -36,7 +44,8 @@ public class MainGUI extends Application {
         btn1.setStyle("-fx-font-size: 1.5em; ");
         btn1.setOnAction(e->{
             System.out.println("Pressed button 1 in main menu");
-            CircleObstacle(stage,scene);
+            Group root2 = CircleObstacle();
+            GamePlay(stage,scene,root2);
         });
 
         Button btn2 = new Button("Resume");
@@ -131,7 +140,7 @@ public class MainGUI extends Application {
         stage.setScene(scene);
         stage.show();
     }
-    public void CircleObstacle(Stage stage,Scene scene){
+    public Group CircleObstacle(){
         Arc arc1=new Arc();
         Arc arc2=new Arc();
         Arc arc3=new Arc();
@@ -194,6 +203,26 @@ public class MainGUI extends Application {
         rotateTransition.setAutoReverse(false);
         rotateTransition.play();
 
+        return root;
+    }
+    public void GamePlay (Stage stage,Scene scene,Group root) {
+
+
+        Text text = new Text();
+        text.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 20));
+        text.setX(50);
+        text.setY(130);
+        text.setText("SCORE: 0  ");
+        text.setFill(Color.WHITE);
+
+        Image image = new Image("star.png");
+        ImageView imageView = new ImageView(image);
+        imageView.setFitHeight(80);
+        imageView.setFitWidth(80);
+        imageView.setX(110);
+        imageView.setY(200);
+        imageView.setPreserveRatio(true);
+
         Button btn1 = new Button("Pause");
         btn1.setMinSize(100, 25);
         btn1.setStyle("-fx-font-size: 1.5em; ");
@@ -208,23 +237,23 @@ public class MainGUI extends Application {
         });
 //        root.setLayoutX(250);
 //        root.setLayoutY(70);
-
+        root.getChildren().add(imageView);
         BorderPane border=new BorderPane();
-        HBox hor=new HBox(btn1,btn2);
         VBox ver=new VBox(btn1,btn2);
         ver.setSpacing(10);
-        ver.setAlignment(Pos.TOP_RIGHT);
-        hor.setSpacing(500);
-       border.setTop(ver);
-       border.setCenter(root);
+        ver.setAlignment(Pos.TOP_LEFT);
+        border.setLeft(ver);
+        border.setCenter(root);
+        border.setRight(text);
 
-       border.setStyle("-fx-background-color: #000000;");
+        border.setStyle("-fx-background-color: #000000;");
         stage.setTitle("Play Game");
         scene.setRoot(border);
         stage.setScene(scene);
         stage.show();
+
+    }
     }
 
-}
 
 
