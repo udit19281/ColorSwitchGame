@@ -1,5 +1,6 @@
 import javafx.animation.RotateTransition;
 import javafx.application.Application;
+import javafx.animation.ScaleTransition;
 import javafx.scene.image.ImageView;
 import javafx.animation.TranslateTransition;
 import javafx.geometry.Pos;
@@ -87,7 +88,7 @@ public class MainGUI extends Application {
                 "-fx-text-fill:#ffffff;");
         btn1.setOnAction(e->{
             System.out.println("Pressed button 1 in main menu");
-            Group root2 = SquareObstacle();
+            Group root2 = CircleObstacle();
             GamePlay(stage,scene,root2);
         });
 
@@ -433,11 +434,20 @@ public class MainGUI extends Application {
 
         Image image = new Image("star.png");
         ImageView imageView = new ImageView(image);
-        imageView.setFitHeight(80);
-        imageView.setFitWidth(80);
-        imageView.setX(110);
-        imageView.setY(200);
+        imageView.setFitHeight(60);
+        imageView.setFitWidth(60);
+        imageView.setX(120);
+        imageView.setY(215);
         imageView.setPreserveRatio(true);
+
+        ScaleTransition scaleTransition = new ScaleTransition();
+        scaleTransition.setDuration(Duration.millis(1000));
+        scaleTransition.setNode(imageView);
+        scaleTransition.setByY(0.4);
+        scaleTransition.setByX(0.4);
+        scaleTransition.setCycleCount(50);
+        scaleTransition.setAutoReverse(true);
+        scaleTransition.play();
 
         Group root=new Group(clip1,clip2,clip3,clip4,imageView);
 
@@ -626,6 +636,15 @@ public class MainGUI extends Application {
         imageView.setX(230);
         imageView.setY(270);
         imageView.setPreserveRatio(true);
+
+        ScaleTransition scaleTransition = new ScaleTransition();
+        scaleTransition.setDuration(Duration.millis(1000));
+        scaleTransition.setNode(imageView);
+        scaleTransition.setByY(0.4);
+        scaleTransition.setByX(0.4);
+        scaleTransition.setCycleCount(50);
+        scaleTransition.setAutoReverse(true);
+        scaleTransition.play();
 
         Group root = new Group(rectangle,rectangle2,rectangle3,rectangle4,imageView);
         RotateTransition rotateTransition = new RotateTransition();
