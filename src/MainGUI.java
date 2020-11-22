@@ -119,7 +119,6 @@ public class MainGUI extends Application {
                 "-fx-text-fill:#ffffff;");
         btn3.setOnAction(e->{
             System.out.println("Pressed button 3 in main menu");
-            ExitGUI(stage,scene);
         });
 
         parent.getChildren().addAll(btn1,btn2,btn3);
@@ -173,7 +172,7 @@ public class MainGUI extends Application {
         parent.setBackground(new Background(myBI));
         scene.setRoot(parent);
 
-        Button btn1 = new Button("Saved");
+        Button btn1 = new Button("Save");
         btn1.setMinSize(150, 25);
         btn1.setStyle("-fx-font-size: 2em;" +
                 "-fx-min-width: 80px; -fx-min-height: 80px;" +
@@ -187,7 +186,7 @@ public class MainGUI extends Application {
             System.out.println("Pressed button 1 in pause menu");
         });
 
-        Button btn2 = new Button("Resume");
+        Button btn2 = new Button(" Resume");
         btn2.setMinSize(150, 25);
         btn2.setLayoutX(250);
         btn2.setLayoutY(250);
@@ -674,6 +673,13 @@ public class MainGUI extends Application {
         rotateTransition.setAutoReverse(false);
         rotateTransition.play();
 
+        Scale scale = new Scale();
+        scale.setPivotX(195);
+        scale.setPivotY(270);
+        scale.setX(1.7);
+        scale.setY(1.7);
+        root.getTransforms().addAll(scale);
+
         return root;
     }
 
@@ -738,7 +744,15 @@ public class MainGUI extends Application {
         ver.setSpacing(10);
         ver.setAlignment(Pos.TOP_LEFT);
         border.setLeft(ver);
-        border.setCenter(root);
+        if(root.getChildren().size()==4)
+        {
+            VBox ver3=new VBox(root);
+            ver3.setSpacing(10);
+            ver3.setAlignment(Pos.CENTER_LEFT);
+            border.setCenter(ver3);
+        }
+        else
+            border.setCenter(root);
         border.setRight(text);
 
         VBox ver2=new VBox(ball,imageView2,imageView);
