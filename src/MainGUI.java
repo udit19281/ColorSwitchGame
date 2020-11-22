@@ -4,6 +4,7 @@ import javafx.animation.ScaleTransition;
 import javafx.scene.image.ImageView;
 import javafx.animation.TranslateTransition;
 import javafx.geometry.Pos;
+import javafx.animation.FadeTransition;
 import javafx.scene.Group;
 import javafx.scene.transform.Scale;
 import javafx.scene.Scene;
@@ -89,7 +90,7 @@ public class MainGUI extends Application {
                 "-fx-text-fill:#ffffff;");
         btn1.setOnAction(e->{
             System.out.println("Pressed button 1 in main menu");
-            Group root2 = LineObstacle();
+            Group root2 = CircleObstacle();
             GamePlay(stage,scene,root2);
         });
 
@@ -529,6 +530,8 @@ public class MainGUI extends Application {
         rectangle8.setHeight(120.0f);
         rectangle8.setFill(Color.DEEPPINK);
 
+        Group root1 = new Group(rectangle,rectangle2,rectangle3,rectangle4);
+        Group root2 = new Group(rectangle5,rectangle6,rectangle7,rectangle8);
 
         TranslateTransition translate = new TranslateTransition();
         translate.setByX(400);
@@ -536,73 +539,38 @@ public class MainGUI extends Application {
         translate.setDuration(Duration.millis(3000));
         translate.setCycleCount(500);
         translate.setAutoReverse(true);
-        translate.setNode(rectangle);
+        translate.setNode(root1);
         translate.play();
 
         TranslateTransition translate2 = new TranslateTransition();
         translate2.setByX(400);
-        translate2.setToX(200);
+        translate2.setToX(-200);
         translate2.setDuration(Duration.millis(3000));
         translate2.setCycleCount(500);
         translate2.setAutoReverse(true);
-        translate2.setNode(rectangle2);
+        translate2.setNode(root2);
         translate2.play();
 
-        TranslateTransition translate3 = new TranslateTransition();
-        translate3.setByX(400);
-        translate3.setToX(200);
-        translate3.setDuration(Duration.millis(3000));
-        translate3.setCycleCount(500);
-        translate3.setAutoReverse(true);
-        translate3.setNode(rectangle3);
-        translate3.play();
+        FadeTransition fade = new FadeTransition();
+        fade.setDuration(Duration.millis(6000));
+        fade.setFromValue(0);
+        fade.setToValue(1);
+        fade.setCycleCount(1000);
+        fade.setAutoReverse(false);
+        fade.setNode(root1);
+        fade.play();
 
-        TranslateTransition translate4 = new TranslateTransition();
-        translate4.setByX(400);
-        translate4.setToX(200);
-        translate4.setDuration(Duration.millis(3000));
-        translate4.setCycleCount(500);
-        translate4.setAutoReverse(true);
-        translate4.setNode(rectangle4);
-        translate4.play();
+        FadeTransition fade2 = new FadeTransition();
+        fade2.setDuration(Duration.millis(6000));
+        fade2.setFromValue(1);
+        fade2.setToValue(0);
+        fade2.setCycleCount(1000);
+        fade2.setAutoReverse(false);
+        fade2.setNode(root2);
+        fade2.play();
 
-        TranslateTransition translate5 = new TranslateTransition();
-        translate5.setByX(400);
-        translate5.setToX(-200);
-        translate5.setDuration(Duration.millis(3000));
-        translate5.setCycleCount(500);
-        translate5.setAutoReverse(true);
-        translate5.setNode(rectangle5);
-        translate5.play();
 
-        TranslateTransition translate6 = new TranslateTransition();
-        translate6.setByX(400);
-        translate6.setToX(-200);
-        translate6.setDuration(Duration.millis(3000));
-        translate6.setCycleCount(500);
-        translate6.setAutoReverse(true);
-        translate6.setNode(rectangle6);
-        translate6.play();
-
-        TranslateTransition translate7 = new TranslateTransition();
-        translate7.setByX(400);
-        translate7.setToX(-200);
-        translate7.setDuration(Duration.millis(3000));
-        translate7.setCycleCount(500);
-        translate7.setAutoReverse(true);
-        translate7.setNode(rectangle7);
-        translate7.play();
-
-        TranslateTransition translate8 = new TranslateTransition();
-        translate8.setByX(400);
-        translate8.setToX(-200);
-        translate8.setDuration(Duration.millis(3000));
-        translate8.setCycleCount(500);
-        translate8.setAutoReverse(true);
-        translate8.setNode(rectangle8);
-        translate8.play();
-
-        Group root = new Group(rectangle,rectangle2,rectangle3,rectangle4,rectangle5,rectangle6,rectangle7,rectangle8);
+        Group root = new Group(root1,root2);
         return root;
 
     }
