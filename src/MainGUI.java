@@ -5,6 +5,7 @@ import javafx.scene.image.ImageView;
 import javafx.animation.TranslateTransition;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
+import javafx.scene.transform.Scale;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
@@ -59,7 +60,7 @@ public class MainGUI extends Application {
 
         rotateTransition2.setDuration(Duration.millis(3000));
         rotateTransition2.setByAngle(360);
-        rotateTransition2.setCycleCount(50);
+        rotateTransition2.setCycleCount(200);
         rotateTransition2.setAutoReverse(false);
         rotateTransition2.play();
 
@@ -68,7 +69,7 @@ public class MainGUI extends Application {
 
         rotateTransition.setDuration(Duration.millis(3000));
         rotateTransition.setByAngle(360);
-        rotateTransition.setCycleCount(50);
+        rotateTransition.setCycleCount(200);
         rotateTransition.setAutoReverse(false);
         rotateTransition.play();
         BackgroundImage myBI= new BackgroundImage(new Image("mainbg.jpg",600,660,false,true),
@@ -88,7 +89,7 @@ public class MainGUI extends Application {
                 "-fx-text-fill:#ffffff;");
         btn1.setOnAction(e->{
             System.out.println("Pressed button 1 in main menu");
-            Group root2 = CircleObstacle();
+            Group root2 = LineObstacle();
             GamePlay(stage,scene,root2);
         });
 
@@ -153,7 +154,7 @@ public class MainGUI extends Application {
 
         rotateTransition2.setDuration(Duration.millis(3000));
         rotateTransition2.setByAngle(360);
-        rotateTransition2.setCycleCount(50);
+        rotateTransition2.setCycleCount(200);
         rotateTransition2.setAutoReverse(false);
         rotateTransition2.play();
 
@@ -162,7 +163,7 @@ public class MainGUI extends Application {
 
         rotateTransition.setDuration(Duration.millis(3000));
         rotateTransition.setByAngle(360);
-        rotateTransition.setCycleCount(50);
+        rotateTransition.setCycleCount(200);
         rotateTransition.setAutoReverse(false);
         rotateTransition.play();
         BackgroundImage myBI= new BackgroundImage(new Image("mainbg.jpg",600,660,false,true),
@@ -232,7 +233,7 @@ public class MainGUI extends Application {
 
         rotateTransition2.setDuration(Duration.millis(3000));
         rotateTransition2.setByAngle(360);
-        rotateTransition2.setCycleCount(50);
+        rotateTransition2.setCycleCount(200);
         rotateTransition2.setAutoReverse(false);
         rotateTransition2.play();
 
@@ -241,7 +242,7 @@ public class MainGUI extends Application {
 
         rotateTransition.setDuration(Duration.millis(3000));
         rotateTransition.setByAngle(360);
-        rotateTransition.setCycleCount(50);
+        rotateTransition.setCycleCount(200);
         rotateTransition.setAutoReverse(false);
         rotateTransition.play();
         BackgroundImage myBI= new BackgroundImage(new Image("mainbg.jpg",600,660,false,true),
@@ -315,7 +316,7 @@ public class MainGUI extends Application {
 
         rotateTransition2.setDuration(Duration.millis(3000));
         rotateTransition2.setByAngle(360);
-        rotateTransition2.setCycleCount(50);
+        rotateTransition2.setCycleCount(200);
         rotateTransition2.setAutoReverse(false);
         rotateTransition2.play();
 
@@ -324,7 +325,7 @@ public class MainGUI extends Application {
 
         rotateTransition.setDuration(Duration.millis(3000));
         rotateTransition.setByAngle(360);
-        rotateTransition.setCycleCount(50);
+        rotateTransition.setCycleCount(200);
         rotateTransition.setAutoReverse(false);
         rotateTransition.play();
         BackgroundImage myBI= new BackgroundImage(new Image("mainbg.jpg",600,660,false,true),
@@ -445,7 +446,7 @@ public class MainGUI extends Application {
         scaleTransition.setNode(imageView);
         scaleTransition.setByY(0.4);
         scaleTransition.setByX(0.4);
-        scaleTransition.setCycleCount(50);
+        scaleTransition.setCycleCount(200);
         scaleTransition.setAutoReverse(true);
         scaleTransition.play();
 
@@ -456,10 +457,17 @@ public class MainGUI extends Application {
         rotateTransition.setNode(root);
         rotateTransition.setDuration(Duration.millis(3000));
         rotateTransition.setByAngle(360);
-        rotateTransition.setCycleCount(50);
+        rotateTransition.setCycleCount(200);
         rotateTransition.setAutoReverse(false);
         rotateTransition.play();
 
+
+        Scale scale = new Scale();
+        scale.setPivotX(150);
+        scale.setPivotY(250);
+        scale.setX(0.8);
+        scale.setY(0.8);
+        root.getTransforms().addAll(scale);
         return root;
     }
 
@@ -631,10 +639,10 @@ public class MainGUI extends Application {
 
         Image image = new Image("star.png");
         ImageView imageView = new ImageView(image);
-        imageView.setFitHeight(55);
-        imageView.setFitWidth(55);
-        imageView.setX(230);
-        imageView.setY(270);
+        imageView.setFitHeight(40);
+        imageView.setFitWidth(40);
+        imageView.setX(240);
+        imageView.setY(275);
         imageView.setPreserveRatio(true);
 
         ScaleTransition scaleTransition = new ScaleTransition();
@@ -642,7 +650,7 @@ public class MainGUI extends Application {
         scaleTransition.setNode(imageView);
         scaleTransition.setByY(0.4);
         scaleTransition.setByX(0.4);
-        scaleTransition.setCycleCount(50);
+        scaleTransition.setCycleCount(500);
         scaleTransition.setAutoReverse(true);
         scaleTransition.play();
 
@@ -651,7 +659,7 @@ public class MainGUI extends Application {
         rotateTransition.setNode(root);
         rotateTransition.setDuration(Duration.millis(3000));
         rotateTransition.setByAngle(360);
-        rotateTransition.setCycleCount(50);
+        rotateTransition.setCycleCount(500);
         rotateTransition.setAutoReverse(false);
         rotateTransition.play();
 
@@ -694,7 +702,7 @@ public class MainGUI extends Application {
         rotateTransition.setNode(root);
         rotateTransition.setDuration(Duration.millis(3000));
         rotateTransition.setByAngle(360);
-        rotateTransition.setCycleCount(50);
+        rotateTransition.setCycleCount(500);
         rotateTransition.setAutoReverse(false);
         rotateTransition.play();
 
@@ -732,6 +740,31 @@ public class MainGUI extends Application {
             ExitGUI(stage,scene);
         });
 
+
+        Circle ball=new Circle();
+        ball.setRadius(14);
+        ball.setFill(Color.YELLOW);
+        TranslateTransition translateTransition = new TranslateTransition();
+        translateTransition.setDuration(Duration.millis(500));
+        translateTransition.setNode(ball);
+        translateTransition.setByY(-50);
+        translateTransition.setToY(-50);
+        translateTransition.setCycleCount(200);
+        translateTransition.setAutoReverse(true);
+        translateTransition.play();
+
+        Image image = new Image("text.png");
+        ImageView imageView = new ImageView(image);
+        imageView.setFitHeight(50);
+        imageView.setFitWidth(200);
+        imageView.setPreserveRatio(true);
+
+        Image image2 = new Image("hand2.png");
+        ImageView imageView2 = new ImageView(image2);
+        imageView2.setFitHeight(50);
+        imageView2.setFitWidth(50);
+        imageView2.setPreserveRatio(true);
+
         BorderPane border=new BorderPane();
         VBox ver=new VBox(btn1,btn2);
         ver.setSpacing(10);
@@ -739,6 +772,12 @@ public class MainGUI extends Application {
         border.setLeft(ver);
         border.setCenter(root);
         border.setRight(text);
+
+        VBox ver2=new VBox(ball,imageView2,imageView);
+        ver2.setSpacing(5);
+        ver2.setAlignment(Pos.BOTTOM_CENTER);
+        border.setBottom(ver2);
+
 
         border.setStyle("-fx-background-color: #000000;");
         stage.setTitle("Play Game");
