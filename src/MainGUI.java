@@ -1,11 +1,15 @@
-import javafx.animation.RotateTransition;
+import javafx.animation.*;
 import javafx.application.Application;
-import javafx.animation.ScaleTransition;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.event.EventHandler;
+import javafx.geometry.*;
 import javafx.scene.image.ImageView;
-import javafx.animation.TranslateTransition;
-import javafx.geometry.Pos;
-import javafx.animation.FadeTransition;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.transform.Translate;
 import javafx.scene.Group;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.transform.Scale;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -90,8 +94,7 @@ public class MainGUI extends Application {
                 "-fx-text-fill:#ffffff;");
         btn1.setOnAction(e->{
             System.out.println("Pressed button 1 in main menu");
-            Group root2 = CircleObstacle();
-            GamePlay(stage,scene,root2);
+            GamePlay(stage,scene);
         });
 
         Button btn2 = new Button("Resume");
@@ -570,6 +573,12 @@ public class MainGUI extends Application {
 
 
         Group root = new Group(root1,root2);
+        /*Scale scale = new Scale();
+        scale.setPivotX(190);
+        scale.setPivotY(135);
+        scale.setX(0.8);
+        scale.setY(0.8);
+        root.getTransforms().addAll(scale);*/
         return root;
 
     }
@@ -683,7 +692,7 @@ public class MainGUI extends Application {
         return root;
     }
 
-    public void GamePlay (Stage stage,Scene scene,Group root) {
+    public void GamePlay (Stage stage,Scene scene) {
 
         Text text = new Text();
         text.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 20));
@@ -716,14 +725,14 @@ public class MainGUI extends Application {
 
 
         Circle ball=new Circle();
-        ball.setRadius(14);
+        ball.setRadius(12);
         ball.setFill(Color.YELLOW);
         TranslateTransition translateTransition = new TranslateTransition();
-        translateTransition.setDuration(Duration.millis(500));
+        translateTransition.setDuration(Duration.millis(100));
         translateTransition.setNode(ball);
-        translateTransition.setByY(-50);
-        translateTransition.setToY(-50);
-        translateTransition.setCycleCount(200);
+        translateTransition.setByY(-20);
+        //translateTransition.setToY(-50);
+        translateTransition.setCycleCount(5000);
         translateTransition.setAutoReverse(true);
         translateTransition.play();
 
@@ -744,22 +753,70 @@ public class MainGUI extends Application {
         ver.setSpacing(10);
         ver.setAlignment(Pos.TOP_LEFT);
         border.setLeft(ver);
-        if(root.getChildren().size()==4)
-        {
-            VBox ver3=new VBox(root);
-            ver3.setSpacing(10);
-            ver3.setAlignment(Pos.CENTER_LEFT);
-            border.setCenter(ver3);
-        }
-        else
-            border.setCenter(root);
         border.setRight(text);
 
-        VBox ver2=new VBox(ball,imageView2,imageView);
+
+        GridPane gridPane = new GridPane();
+        gridPane.setMaxWidth(350);
+        gridPane.setPrefWidth(350);
+        gridPane.setMaxHeight(Double.MAX_VALUE);
+        //gridPane.setPrefHeight(Double.MAX_VALUE);
+        gridPane.setVgap(200);
+        gridPane.setStyle("-fx-background: transparent; -fx-border-color: transparent");
+        gridPane.setAlignment(Pos.CENTER);
+        Group root = CircleObstacle();
+        Group root2 = SquareObstacle();
+        Group root3 = LineObstacle();
+        Group root4 = PlusObstacle();
+        Group root5= CircleObstacle();
+        gridPane.add(root, 0, 0);
+        gridPane.add(root2, 0, 1);
+        gridPane.add(root4, 0, 2);
+        gridPane.add(root5, 0, 3);
+        gridPane.setHalignment(root, HPos.CENTER);
+        gridPane.setHalignment(root2, HPos.CENTER);
+        gridPane.setHalignment(root4, HPos.LEFT);
+        gridPane.setHalignment(root5, HPos.CENTER);
+
+
+
+        ScrollPane scroll = new ScrollPane();
+        scroll.setContent(gridPane);
+        scroll.setFitToHeight(true);
+        scroll.setPrefWidth(350);
+        scroll.setMaxWidth(350);
+        scroll.setStyle("-fx-background: black; -fx-border-color: black");
+        scroll.hbarPolicyProperty().setValue(ScrollPane.ScrollBarPolicy.NEVER);
+        scroll.vbarPolicyProperty().setValue(ScrollPane.ScrollBarPolicy.NEVER);
+        scroll.setVvalue(1.0);
+        border.setCenter(scroll);
+
+        Button btn3 = new Button();
+        btn3.setMinSize(60, 60);
+//        btn1.setStyle("-fx-font-size: 1.5em; ");
+        btn3.setStyle("-fx-font-size: 2em;" +
+                "-fx-background-color: #000000;" +
+                "-fx-text-fill:#ffffff;");
+        btn3.setGraphic(imageView2);
+        /*btn3.setOnAction(e->{
+            System.out.println("ball ball");
+            //moveball(ver3);
+        });*/
+        EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent e) {
+              moveball(gridPane);
+            }
+        };
+        btn3.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
+
+        VBox ver2=new VBox(ball,btn3,imageView);
         ver2.setSpacing(5);
         ver2.setAlignment(Pos.BOTTOM_CENTER);
         border.setBottom(ver2);
-
+        Translate translate = new Translate();
+        translate.setY(-70);
+        ball.getTransforms().addAll(translate);
 
         border.setStyle("-fx-background-color: #000000;");
         stage.setTitle("Play Game");
@@ -768,6 +825,18 @@ public class MainGUI extends Application {
         stage.show();
 
     }
+
+    public void moveball(GridPane gridPane)
+    {
+        TranslateTransition translateTransition = new TranslateTransition();
+        translateTransition.setDuration(Duration.millis(500));
+        translateTransition.setNode(gridPane);
+        translateTransition.setByY(80);
+        translateTransition.setAutoReverse(false);
+        translateTransition.play();
+    }
+
+
     }
 
 
