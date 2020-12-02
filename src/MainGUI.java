@@ -749,6 +749,7 @@ public class MainGUI extends Application {
         imageView2.setPreserveRatio(true);
 
         BorderPane border=new BorderPane();
+        border.setStyle("-fx-background: black; -fx-border-color: black;");
         VBox ver=new VBox(btn1,btn2);
         ver.setSpacing(10);
         ver.setAlignment(Pos.TOP_LEFT);
@@ -757,12 +758,12 @@ public class MainGUI extends Application {
 
 
         GridPane gridPane = new GridPane();
-        gridPane.setMaxWidth(350);
-        gridPane.setPrefWidth(350);
+        //gridPane.setMaxWidth(350);
+        //gridPane.setPrefWidth(350);
         gridPane.setMaxHeight(Double.MAX_VALUE);
         //gridPane.setPrefHeight(Double.MAX_VALUE);
         gridPane.setVgap(200);
-        gridPane.setStyle("-fx-background: transparent; -fx-border-color: transparent");
+        gridPane.setStyle("-fx-background: black; -fx-border-color: black;");
         gridPane.setAlignment(Pos.CENTER);
         Group root = CircleObstacle();
         Group root2 = SquareObstacle();
@@ -783,9 +784,8 @@ public class MainGUI extends Application {
         ScrollPane scroll = new ScrollPane();
         scroll.setContent(gridPane);
         scroll.setFitToHeight(true);
-        scroll.setPrefWidth(350);
-        scroll.setMaxWidth(350);
-        scroll.setStyle("-fx-background: black; -fx-border-color: black");
+        scroll.setFitToWidth(true);
+        scroll.setStyle("-fx-background: black; -fx-border-color: black;-fx-padding: 0;-fx-background-insets: 0;");
         scroll.hbarPolicyProperty().setValue(ScrollPane.ScrollBarPolicy.NEVER);
         scroll.vbarPolicyProperty().setValue(ScrollPane.ScrollBarPolicy.NEVER);
         scroll.setVvalue(1.0);
@@ -818,7 +818,7 @@ public class MainGUI extends Application {
         translate.setY(-70);
         ball.getTransforms().addAll(translate);
 
-        border.setStyle("-fx-background-color: #000000;");
+        //border.setStyle("-fx-background-color: #000000;");
         stage.setTitle("Play Game");
         scene.setRoot(border);
         stage.setScene(scene);
