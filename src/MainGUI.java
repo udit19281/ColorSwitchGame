@@ -2,6 +2,7 @@ import javafx.animation.*;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.*;
 import javafx.scene.image.ImageView;
@@ -29,6 +30,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
 public class MainGUI extends Application {
+    static long oldtime;
     public static void main(String[] args) {
         launch(args);
     }
@@ -696,8 +698,8 @@ public class MainGUI extends Application {
 
         Text text = new Text();
         text.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 20));
-        text.setX(50);
-        text.setY(130);
+        text.setX(480);
+        text.setY(25);
         text.setText("SCORE: 0  ");
         text.setFill(Color.WHITE);
 
@@ -726,15 +728,9 @@ public class MainGUI extends Application {
 
         Circle ball=new Circle();
         ball.setRadius(12);
+        ball.setLayoutX(288);
+        ball.setLayoutY(450);
         ball.setFill(Color.YELLOW);
-        TranslateTransition translateTransition = new TranslateTransition();
-        translateTransition.setDuration(Duration.millis(100));
-        translateTransition.setNode(ball);
-        translateTransition.setByY(-20);
-        //translateTransition.setToY(-50);
-        translateTransition.setCycleCount(5000);
-        translateTransition.setAutoReverse(true);
-        translateTransition.play();
 
         Image image = new Image("text.png");
         ImageView imageView = new ImageView(image);
@@ -753,8 +749,6 @@ public class MainGUI extends Application {
         VBox ver=new VBox(btn1,btn2);
         ver.setSpacing(10);
         ver.setAlignment(Pos.TOP_LEFT);
-        border.setLeft(ver);
-        border.setRight(text);
 
 
         GridPane gridPane = new GridPane();
@@ -782,6 +776,8 @@ public class MainGUI extends Application {
 
 
         ScrollPane scroll = new ScrollPane();
+        scroll.setLayoutX(150);
+        scroll.setLayoutY(0);
         scroll.setContent(gridPane);
         scroll.setFitToHeight(true);
         scroll.setFitToWidth(true);
@@ -789,7 +785,7 @@ public class MainGUI extends Application {
         scroll.hbarPolicyProperty().setValue(ScrollPane.ScrollBarPolicy.NEVER);
         scroll.vbarPolicyProperty().setValue(ScrollPane.ScrollBarPolicy.NEVER);
         scroll.setVvalue(1.0);
-        border.setCenter(scroll);
+
 
         Button btn3 = new Button();
         btn3.setMinSize(60, 60);
@@ -798,29 +794,61 @@ public class MainGUI extends Application {
                 "-fx-background-color: #000000;" +
                 "-fx-text-fill:#ffffff;");
         btn3.setGraphic(imageView2);
-        /*btn3.setOnAction(e->{
-            System.out.println("ball ball");
-            //moveball(ver3);
-        });*/
+        oldtime = System.currentTimeMillis();
         EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent e) {
-              moveball(gridPane);
+                oldtime = System.currentTimeMillis();
+                if(ball.getTranslateY()>-100) {
+                    TranslateTransition translateTransition = new TranslateTransition();
+                    translateTransition.setDuration(Duration.millis(100));
+                    translateTransition.setNode(ball);
+                    translateTransition.setByY(-35);
+                    translateTransition.setCycleCount(1);
+                    translateTransition.play();
+                }
+                else
+                    moveball(gridPane);
             }
         };
         btn3.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
 
-        VBox ver2=new VBox(ball,btn3,imageView);
-        ver2.setSpacing(5);
+        new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                if(System.currentTimeMillis()-oldtime>=200)
+                {
+                    if(ball.getTranslateY()<=-35)
+                    {
+                        TranslateTransition translateTransition = new TranslateTransition();
+                        translateTransition.setDuration(Duration.millis(100));
+                        translateTransition.setNode(ball);
+                        translateTransition.setByY(35);
+                        translateTransition.setCycleCount(1);
+                        translateTransition.play();
+                    }
+                    else {
+                        TranslateTransition translateTransition = new TranslateTransition();
+                        translateTransition.setDuration(Duration.millis(100));
+                        translateTransition.setNode(gridPane);
+                        translateTransition.setByY(-35);
+                        translateTransition.play();
+                    }
+                }
+            }
+        }.start();
+
+        VBox ver2=new VBox(btn3,imageView);
         ver2.setAlignment(Pos.BOTTOM_CENTER);
-        border.setBottom(ver2);
-        Translate translate = new Translate();
-        translate.setY(-70);
-        ball.getTransforms().addAll(translate);
+        ver2.setSpacing(5);
+        ver2.setLayoutX(250);
+        ver2.setLayoutY(500);
 
         //border.setStyle("-fx-background-color: #000000;");
         stage.setTitle("Play Game");
-        scene.setRoot(border);
+        Group mainroot = new Group(ver,scroll,ball,ver2,text);
+        scene.setRoot(mainroot);
+        scene.setFill(Color.BLACK);
         stage.setScene(scene);
         stage.show();
 
@@ -829,15 +857,14 @@ public class MainGUI extends Application {
     public void moveball(GridPane gridPane)
     {
         TranslateTransition translateTransition = new TranslateTransition();
-        translateTransition.setDuration(Duration.millis(500));
+        translateTransition.setDuration(Duration.millis(100));
         translateTransition.setNode(gridPane);
-        translateTransition.setByY(80);
-        translateTransition.setAutoReverse(false);
+        translateTransition.setByY(35);
         translateTransition.play();
     }
 
 
-    }
+}
 
 
 
