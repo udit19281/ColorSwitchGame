@@ -30,6 +30,8 @@ import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
+import java.awt.*;
+
 public class MainGUI extends Application {
     static long oldtime;
     public static void main(String[] args) {
@@ -794,10 +796,10 @@ public class MainGUI extends Application {
                     translateTransition.setByY(-35);
                     translateTransition.setCycleCount(1);
                     translateTransition.play();
+
                 }
                 else
                     moveball(gridPane);
-                    //System.out.println(scene.getPixelReader().getArgb(x, y));
             }
         };
         btn3.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
@@ -825,6 +827,37 @@ public class MainGUI extends Application {
                             translateTransition.play();
                         }
                     }
+                }
+            }
+        }.start();
+
+        new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                Bounds bounds = ball.getBoundsInLocal();
+                Bounds screenBounds = ball.localToScreen(bounds);
+                int x = (int) screenBounds.getMinX()+(int) (screenBounds.getWidth()/2);
+                int y = (int) screenBounds.getMinY()+ (int) (screenBounds.getHeight()/2);
+                int y2= (int) screenBounds.getMinY()-1;
+                java.awt.Color c = null;
+                java.awt.Color d = null;
+                try {
+                    Robot r = new Robot();
+                    c = r.getPixelColor(x, y);
+                    d = r.getPixelColor(x,y2 );
+                }
+                catch (Exception evt) {
+                    System.err.println(evt.getMessage());
+                }
+                if( d.equals(java.awt.Color.YELLOW) || d.equals(java.awt.Color.WHITE) || d.equals(java.awt.Color.BLACK))
+                {
+                }
+                else
+                {
+                    System.out.println(d);
+                    System.out.println("end");
+                    stop();
+                    MainMenuGUI(stage);
                 }
             }
         }.start();
