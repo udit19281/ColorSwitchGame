@@ -9,6 +9,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.transform.Translate;
 import javafx.scene.Group;
+import javafx.scene.image.PixelReader;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.transform.Scale;
@@ -750,13 +751,14 @@ public class MainGUI extends Application {
         ver.setSpacing(10);
         ver.setAlignment(Pos.TOP_LEFT);
 
-
         GridPane gridPane = new GridPane();
         //gridPane.setMaxWidth(350);
         //gridPane.setPrefWidth(350);
         gridPane.setMaxHeight(Double.MAX_VALUE);
         //gridPane.setPrefHeight(Double.MAX_VALUE);
         gridPane.setVgap(200);
+        gridPane.setLayoutX(150);
+        gridPane.setLayoutY(-1400);
         gridPane.setStyle("-fx-background: black; -fx-border-color: black;");
         gridPane.setAlignment(Pos.CENTER);
         Group root = CircleObstacle();
@@ -772,20 +774,6 @@ public class MainGUI extends Application {
         gridPane.setHalignment(root2, HPos.CENTER);
         gridPane.setHalignment(root4, HPos.LEFT);
         gridPane.setHalignment(root5, HPos.CENTER);
-
-
-
-        ScrollPane scroll = new ScrollPane();
-        scroll.setLayoutX(150);
-        scroll.setLayoutY(0);
-        scroll.setContent(gridPane);
-        scroll.setFitToHeight(true);
-        scroll.setFitToWidth(true);
-        scroll.setStyle("-fx-background: black; -fx-border-color: black;-fx-padding: 0;-fx-background-insets: 0;");
-        scroll.hbarPolicyProperty().setValue(ScrollPane.ScrollBarPolicy.NEVER);
-        scroll.vbarPolicyProperty().setValue(ScrollPane.ScrollBarPolicy.NEVER);
-        scroll.setVvalue(1.0);
-
 
         Button btn3 = new Button();
         btn3.setMinSize(60, 60);
@@ -809,6 +797,7 @@ public class MainGUI extends Application {
                 }
                 else
                     moveball(gridPane);
+                    //System.out.println(scene.getPixelReader().getArgb(x, y));
             }
         };
         btn3.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
@@ -828,11 +817,13 @@ public class MainGUI extends Application {
                         translateTransition.play();
                     }
                     else {
-                        TranslateTransition translateTransition = new TranslateTransition();
-                        translateTransition.setDuration(Duration.millis(100));
-                        translateTransition.setNode(gridPane);
-                        translateTransition.setByY(-35);
-                        translateTransition.play();
+                        if(gridPane.getTranslateY()>=35) {
+                            TranslateTransition translateTransition = new TranslateTransition();
+                            translateTransition.setDuration(Duration.millis(100));
+                            translateTransition.setNode(gridPane);
+                            translateTransition.setByY(-35);
+                            translateTransition.play();
+                        }
                     }
                 }
             }
@@ -843,10 +834,9 @@ public class MainGUI extends Application {
         ver2.setSpacing(5);
         ver2.setLayoutX(250);
         ver2.setLayoutY(500);
-
         //border.setStyle("-fx-background-color: #000000;");
         stage.setTitle("Play Game");
-        Group mainroot = new Group(ver,scroll,ball,ver2,text);
+        Group mainroot = new Group(ver,gridPane,ball,ver2,text);
         scene.setRoot(mainroot);
         scene.setFill(Color.BLACK);
         stage.setScene(scene);
