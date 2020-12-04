@@ -761,7 +761,7 @@ public class MainGUI extends Application {
         gridPane.setVgap(200);
         gridPane.setLayoutX(150);
         gridPane.setLayoutY(-1400);
-        gridPane.setStyle("-fx-background: black; -fx-border-color: black;");
+        gridPane.setStyle("-fx-background: transparent; -fx-border-color: transparent;");
         gridPane.setAlignment(Pos.CENTER);
         Group root = CircleObstacle();
         Group root2 = SquareObstacle();
@@ -831,6 +831,9 @@ public class MainGUI extends Application {
             }
         }.start();
 
+        java.awt.Color pink= new java.awt.Color(255,20,147);
+        java.awt.Color blue= java.awt.Color.BLUE;
+        java.awt.Color aqua= java.awt.Color.CYAN;
         new AnimationTimer() {
             @Override
             public void handle(long now) {
@@ -839,20 +842,20 @@ public class MainGUI extends Application {
                 int x = (int) screenBounds.getMinX()+(int) (screenBounds.getWidth()/2);
                 int y = (int) screenBounds.getMinY()+ (int) (screenBounds.getHeight()/2);
                 int y2= (int) screenBounds.getMinY()-1;
+                int y3= (int) screenBounds.getMaxY()+1;
                 java.awt.Color c = null;
                 java.awt.Color d = null;
+                java.awt.Color d2 = null;
                 try {
                     Robot r = new Robot();
                     c = r.getPixelColor(x, y);
                     d = r.getPixelColor(x,y2 );
+                    d2 = r.getPixelColor(x,y3 );
                 }
                 catch (Exception evt) {
                     System.err.println(evt.getMessage());
                 }
-                if( d.equals(java.awt.Color.YELLOW) || d.equals(java.awt.Color.WHITE) || d.equals(java.awt.Color.BLACK))
-                {
-                }
-                else
+                if( d.equals(blue) || d.equals(pink) || d.equals(aqua) || d2.equals(blue) || d2.equals(pink) || d2.equals(aqua))
                 {
                     System.out.println(d);
                     System.out.println("end");
