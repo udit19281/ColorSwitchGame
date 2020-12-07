@@ -34,6 +34,8 @@ import java.awt.*;
 
 public class MainGUI extends Application {
     static long oldtime;
+    static int pos_star;
+    static int score;
     public static void main(String[] args) {
         launch(args);
     }
@@ -441,24 +443,7 @@ public class MainGUI extends Application {
         Shape clip4= Shape.subtract(arc4,circ4);
         clip4.setFill(Color.DEEPPINK);
 
-        Image image = new Image("star.png");
-        ImageView imageView = new ImageView(image);
-        imageView.setFitHeight(60);
-        imageView.setFitWidth(60);
-        imageView.setX(120);
-        imageView.setY(215);
-        imageView.setPreserveRatio(true);
-
-        ScaleTransition scaleTransition = new ScaleTransition();
-        scaleTransition.setDuration(Duration.millis(1000));
-        scaleTransition.setNode(imageView);
-        scaleTransition.setByY(0.4);
-        scaleTransition.setByX(0.4);
-        scaleTransition.setCycleCount(200);
-        scaleTransition.setAutoReverse(true);
-        scaleTransition.play();
-
-        Group root=new Group(clip1,clip2,clip3,clip4,imageView);
+        Group root=new Group(clip1,clip2,clip3,clip4);
 
 //        Scene scene=new Scene(root,600,600);
         RotateTransition rotateTransition = new RotateTransition();
@@ -618,27 +603,11 @@ public class MainGUI extends Application {
         rectangle4.setHeight(15.0f);
         rectangle4.setFill(Color.BLUE);
 
-        Image image = new Image("star.png");
-        ImageView imageView = new ImageView(image);
-        imageView.setFitHeight(40);
-        imageView.setFitWidth(40);
-        imageView.setX(240);
-        imageView.setY(275);
-        imageView.setPreserveRatio(true);
 
-        ScaleTransition scaleTransition = new ScaleTransition();
-        scaleTransition.setDuration(Duration.millis(1000));
-        scaleTransition.setNode(imageView);
-        scaleTransition.setByY(0.4);
-        scaleTransition.setByX(0.4);
-        scaleTransition.setCycleCount(500);
-        scaleTransition.setAutoReverse(true);
-        scaleTransition.play();
-
-        Group root = new Group(rectangle,rectangle2,rectangle3,rectangle4,imageView);
+        Group root = new Group(rectangle,rectangle2,rectangle3,rectangle4);
         RotateTransition rotateTransition = new RotateTransition();
         rotateTransition.setNode(root);
-        rotateTransition.setDuration(Duration.millis(3000));
+        rotateTransition.setDuration(Duration.millis(5000));
         rotateTransition.setByAngle(360);
         rotateTransition.setCycleCount(500);
         rotateTransition.setAutoReverse(false);
@@ -681,7 +650,7 @@ public class MainGUI extends Application {
         Group root = new Group(rectangle,rectangle2,rectangle3,rectangle4);
         RotateTransition rotateTransition = new RotateTransition();
         rotateTransition.setNode(root);
-        rotateTransition.setDuration(Duration.millis(3000));
+        rotateTransition.setDuration(Duration.millis(9000));
         rotateTransition.setByAngle(360);
         rotateTransition.setCycleCount(500);
         rotateTransition.setAutoReverse(false);
@@ -698,12 +667,12 @@ public class MainGUI extends Application {
     }
 
     public void GamePlay (Stage stage,Scene scene) {
-
+        score =0;
         Text text = new Text();
         text.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 20));
-        text.setX(480);
+        text.setX(470);
         text.setY(25);
-        text.setText("SCORE: 0  ");
+        text.setText("SCORE:"+score);
         text.setFill(Color.WHITE);
 
 
@@ -753,6 +722,7 @@ public class MainGUI extends Application {
         ver.setSpacing(10);
         ver.setAlignment(Pos.TOP_LEFT);
 
+        Group star = Star();
         GridPane gridPane = new GridPane();
         //gridPane.setMaxWidth(350);
         //gridPane.setPrefWidth(350);
@@ -769,13 +739,16 @@ public class MainGUI extends Application {
         Group root4 = PlusObstacle();
         Group root5= CircleObstacle();
         gridPane.add(root, 0, 0);
-        gridPane.add(root2, 0, 1);
-        gridPane.add(root4, 0, 2);
+        gridPane.add(root4, 0, 1);
+        gridPane.add(root2, 0, 2);
         gridPane.add(root5, 0, 3);
         gridPane.setHalignment(root, HPos.CENTER);
         gridPane.setHalignment(root2, HPos.CENTER);
         gridPane.setHalignment(root4, HPos.LEFT);
         gridPane.setHalignment(root5, HPos.CENTER);
+        gridPane.add(star, 0, 3);
+        pos_star= gridPane.getRowIndex(star);
+        gridPane.setHalignment(star, HPos.CENTER);
 
         Button btn3 = new Button();
         btn3.setMinSize(60, 60);
@@ -809,21 +782,21 @@ public class MainGUI extends Application {
             public void handle(long now) {
                 if(System.currentTimeMillis()-oldtime>=200)
                 {
-                    if(ball.getTranslateY()<=-35)
+                    if(ball.getTranslateY()<=-25)
                     {
                         TranslateTransition translateTransition = new TranslateTransition();
                         translateTransition.setDuration(Duration.millis(100));
                         translateTransition.setNode(ball);
-                        translateTransition.setByY(35);
+                        translateTransition.setByY(25);
                         translateTransition.setCycleCount(1);
                         translateTransition.play();
                     }
                     else {
-                        if(gridPane.getTranslateY()>=35) {
+                        if(gridPane.getTranslateY()>=25) {
                             TranslateTransition translateTransition = new TranslateTransition();
                             translateTransition.setDuration(Duration.millis(100));
                             translateTransition.setNode(gridPane);
-                            translateTransition.setByY(-35);
+                            translateTransition.setByY(-25);
                             translateTransition.play();
                         }
                     }
@@ -840,7 +813,6 @@ public class MainGUI extends Application {
                 Bounds bounds = ball.getBoundsInLocal();
                 Bounds screenBounds = ball.localToScreen(bounds);
                 int x = (int) screenBounds.getMinX()+(int) (screenBounds.getWidth()/2);
-                int y = (int) screenBounds.getMinY()+ (int) (screenBounds.getHeight()/2);
                 int y2= (int) screenBounds.getMinY()-1;
                 int y3= (int) screenBounds.getMaxY()+1;
                 java.awt.Color c = null;
@@ -848,9 +820,9 @@ public class MainGUI extends Application {
                 java.awt.Color d2 = null;
                 try {
                     Robot r = new Robot();
-                    c = r.getPixelColor(x, y);
                     d = r.getPixelColor(x,y2 );
                     d2 = r.getPixelColor(x,y3 );
+                    System.out.println(d2);
                 }
                 catch (Exception evt) {
                     System.err.println(evt.getMessage());
@@ -861,6 +833,15 @@ public class MainGUI extends Application {
                     System.out.println("end");
                     stop();
                     MainMenuGUI(stage);
+                }
+                if( d.equals(java.awt.Color.WHITE) || d2.equals(java.awt.Color.WHITE))
+                {
+                    gridPane.getChildren().remove(star);
+                    score++;
+                    text.setText("SCORE:"+score);
+                    pos_star= pos_star-1;
+                    gridPane.add(star, 0, pos_star);
+                    gridPane.setHalignment(root5, HPos.CENTER);
                 }
             }
         }.start();
@@ -887,6 +868,27 @@ public class MainGUI extends Application {
         translateTransition.setNode(gridPane);
         translateTransition.setByY(35);
         translateTransition.play();
+    }
+
+    public Group Star() {
+
+        Image image = new Image("star.png");
+        ImageView imageView = new ImageView(image);
+        imageView.setFitHeight(40);
+        imageView.setFitWidth(40);
+        imageView.setPreserveRatio(true);
+
+        ScaleTransition scaleTransition = new ScaleTransition();
+        scaleTransition.setDuration(Duration.millis(1000));
+        scaleTransition.setNode(imageView);
+        scaleTransition.setByY(0.4);
+        scaleTransition.setByX(0.4);
+        scaleTransition.setCycleCount(500);
+        scaleTransition.setAutoReverse(true);
+        scaleTransition.play();
+
+        Group star=new Group(imageView);
+        return star;
     }
 
 
