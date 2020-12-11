@@ -2,6 +2,7 @@ import javafx.animation.AnimationTimer;
 import javafx.animation.RotateTransition;
 import javafx.animation.TranslateTransition;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
 import javafx.geometry.HPos;
@@ -13,41 +14,49 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.text.*;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontPosture;
-import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.awt.*;
-import java.io.Serializable;
-import java.util.ArrayList;
+import java.io.*;
 
 public class Game extends Application implements Serializable {
     private static final long serialVersionUID = 40L;
-    private static long oldtime;
-    private static int pos_star;
-    private static int score;
-    private CircleObstacle Circle;
-    private LineObstacle Line;
-    private PlusObstacle Plus;
-    private SquareObstacle Square;
-    private Star Star;
-    private ArrayList<Save> SavedGameList;
+    transient private static long oldtime;
+    transient private static int pos_star;
+    transient private static int score;
+    transient private CircleObstacle Circle;
+    transient private LineObstacle Line;
+    transient private PlusObstacle Plus;
+    transient private SquareObstacle Square;
+    transient private Star Star;
+    private int bestScore;
+    private double SaveArray[];
 
     public Game(){
-         Circle=new CircleObstacle();
-         Line=new LineObstacle();
-         Plus=new PlusObstacle();
-         Square=new SquareObstacle();
-         Star=new Star();
-        SavedGameList=new ArrayList<Save>();
+        Circle=new CircleObstacle();
+        Line=new LineObstacle();
+        Plus=new PlusObstacle();
+        Square=new SquareObstacle();
+        Star=new Star();
+        bestScore=0;
+        SaveArray=new double[3];
     }
     @Override
     public void start(Stage stage) throws Exception {
+        String source = new File("Music/track.mp3").toURI().toString();
+        Media media = null;
+        media = new Media(source);
+        MediaPlayer mediaPlayer = new MediaPlayer(media);
+        mediaPlayer.setCycleCount(200);
+        mediaPlayer.setAutoPlay(true);
+        mediaPlayer.play();
         MainMenuGUI(stage);
     }
     public void MainMenuGUI(Stage stage) {
@@ -108,7 +117,7 @@ public class Game extends Application implements Serializable {
                 "-fx-text-fill:#ffffff;");
         btn1.setOnAction(e->{
             System.out.println("Pressed button 1 in main menu");
-            GamePlay(stage,scene);
+            GamePlay(stage,scene,false);
         });
 
         Button btn2 = new Button("Resume");
@@ -136,14 +145,14 @@ public class Game extends Application implements Serializable {
                 "-fx-text-fill:#ffffff;");
         btn3.setOnAction(e->{
             System.out.println("Pressed button 3 in main menu");
+            Platform.exit();
         });
 
         parent.getChildren().addAll(btn1,btn2,btn3);
         stage.setScene(scene);
         stage.show();
     }
-    public void PauseGameGUI(Stage stage,Scene scene){
-        Scene previousScene=scene;
+    public void PauseGameGUI(Stage stage,Scene scene,double[] SaveArray) {
         stage.setTitle("Pause Menu");
         stage.setHeight(695);
         stage.setWidth(600);
@@ -201,7 +210,17 @@ public class Game extends Application implements Serializable {
         btn1.setLayoutY(200);
 //        btn1.setStyle("-fx-font-size: 1.5em; ");
         btn1.setOnAction(e->{
-            System.out.println("Pressed button 1 in pause menu");
+            System.out.println("Save Game");
+          //Save save=new Save(SaveArray);
+          try{
+              serialize();
+              System.out.println("DONE SERIALIZE");
+              //show game saved Succefully
+          }
+          catch (Exception ignored){
+
+              System.out.println("ERROR IN SERIALIZE:221");
+            }
         });
 
         Button btn2 = new Button(" Resume");
@@ -216,6 +235,7 @@ public class Game extends Application implements Serializable {
                 "-fx-text-fill:#ffffff;");
         btn2.setOnAction(e->{
             System.out.println("Pressed button 2 in pause menu");
+            GamePlay(stage,scene,true);
         });
         parent.getChildren().addAll(btn1,btn2);
         stage.setScene(scene);
@@ -269,6 +289,8 @@ public class Game extends Application implements Serializable {
         scene.setRoot(parent);
         Text text = new Text();
         text.setText("SELECT GAME");
+        text.setX(200);
+        text.setY(200);
         text.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 25));
         text.setFill(Color.WHITE);
 
@@ -283,7 +305,18 @@ public class Game extends Application implements Serializable {
                 "-fx-background-color: #000000;" +
                 "-fx-text-fill:#ffffff;");
         btn1.setOnAction(e->{
-            System.out.println("Pressed button 1 in pause menu");
+            System.out.println("Load Game1");
+           // Save save=new Save();
+            try{
+                SaveArray=deserialize();
+                System.out.println("Done Deserialize");
+                GamePlay(stage,scene,true);
+            }
+            catch (Exception err){
+                System.out.println(err);
+                System.out.println("ERROR IN DESERIALIZE");
+            }
+
         });
 
         Button btn2 = new Button("Game 2");
@@ -299,7 +332,7 @@ public class Game extends Application implements Serializable {
         btn2.setOnAction(e->{
             System.out.println("Pressed button 2 in pause menu");
         });
-        parent.getChildren().addAll(btn1,btn2);
+        parent.getChildren().addAll(text,btn1,btn2);
         stage.setScene(scene);
         stage.show();
     }
@@ -361,6 +394,7 @@ public class Game extends Application implements Serializable {
                 "-fx-background-color: #000000;" +
                 "-fx-text-fill:#ffffff;");
         btn1.setOnAction(e->{
+            GamePlay(stage,scene,true);
             System.out.println("Pressed button 1 in exit menu");
         });
 
@@ -375,6 +409,7 @@ public class Game extends Application implements Serializable {
                 "-fx-background-color: #000000;" +
                 "-fx-text-fill:#ffffff;");
         btn2.setOnAction(e->{
+            GamePlay(stage,scene,false);
             System.out.println("Pressed button 2 in exit menu");
         });
 
@@ -397,8 +432,14 @@ public class Game extends Application implements Serializable {
         stage.setScene(scene);
         stage.show();
     }
-    public void GamePlay (Stage stage,Scene scene) {
-        score =0;
+    public void GamePlay (Stage stage,Scene scene,boolean CallFromSave) {
+        if(CallFromSave){
+            score=(int)SaveArray[0];
+        }
+        else{
+            score =0;
+        }
+
         Text text = new Text();
         text.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 20));
         text.setX(470);
@@ -414,7 +455,7 @@ public class Game extends Application implements Serializable {
         btn1.setOnAction(e->{
 
             System.out.println("Pause the game");
-            PauseGameGUI(stage,scene);
+            PauseGameGUI(stage,scene,SaveArray);
         });
         Button btn2 = new Button("Exit");
         btn2.setMinSize(100, 25);
@@ -459,25 +500,30 @@ public class Game extends Application implements Serializable {
         //gridPane.setPrefHeight(Double.MAX_VALUE);
         gridPane.setVgap(200);
         gridPane.setLayoutX(150);
-        gridPane.setLayoutY(-1400);
+        gridPane.setLayoutY(-1600);
         gridPane.setStyle("-fx-background: transparent; -fx-border-color: transparent;");
         gridPane.setAlignment(Pos.CENTER);
-        Group root = Circle.getObstacle();
+
+        Group root = Circle.Big_circle();
         Group root2 = Square.getObstacle();
-        Group root3 = Line.getObstacle();
+        Group root3 = Circle.getObstacle();
         Group root4 = Plus.getObstacle();
         Group root5= Circle.getObstacle();
-        gridPane.add(root, 0, 0);
-        gridPane.add(root4, 0, 1);
-        gridPane.add(root2, 0, 2);
-        gridPane.add(root5, 0, 3);
-        gridPane.setHalignment(root, HPos.CENTER);
-        gridPane.setHalignment(root2, HPos.CENTER);
-        gridPane.setHalignment(root4, HPos.LEFT);
-        gridPane.setHalignment(root5, HPos.CENTER);
-        gridPane.add(star, 0, 3);
-        pos_star= gridPane.getRowIndex(star);
-        gridPane.setHalignment(star, HPos.CENTER);
+
+        gridPane.add(root3, 0, 0);
+        gridPane.add(root, 0, 1);
+        gridPane.add(root4, 0, 2);
+        gridPane.add(root2, 0, 3);
+        gridPane.add(root5, 0, 4);
+
+        GridPane.setHalignment(root, HPos.CENTER);
+        GridPane.setHalignment(root3, HPos.CENTER);
+        GridPane.setHalignment(root2, HPos.CENTER);
+        GridPane.setHalignment(root4, HPos.LEFT);
+        GridPane.setHalignment(root5, HPos.CENTER);
+        gridPane.add(star, 0, 4); //column
+        pos_star= GridPane.getRowIndex(star);
+        GridPane.setHalignment(star, HPos.CENTER);
 
         Button btn3 = new Button();
         btn3.setMinSize(60, 60);
@@ -486,6 +532,22 @@ public class Game extends Application implements Serializable {
                 "-fx-background-color: #000000;" +
                 "-fx-text-fill:#ffffff;");
         btn3.setGraphic(imageView2);
+        btn3.setOnAction(e->{
+                String source = new File("Music/jump.wav").toURI().toString();
+                Media media = null;
+                media = new Media(source);
+                MediaPlayer mediaPlayer = new MediaPlayer(media);
+                mediaPlayer.setCycleCount(1);
+                //mediaPlayer.setAutoPlay(true);
+                mediaPlayer.play();
+
+        });
+        if(CallFromSave){
+            //code
+            score=(int)SaveArray[0];
+            gridPane.setTranslateY(SaveArray[2]);
+            ball.setTranslateY(SaveArray[1]);
+        }
         oldtime = System.currentTimeMillis();
         EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
             @Override
@@ -501,14 +563,14 @@ public class Game extends Application implements Serializable {
 
                 }
                 else
-                    moveball(gridPane);
+                    Moveball(gridPane);
             }
         };
         btn3.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
-
         new AnimationTimer() {
             @Override
             public void handle(long now) {
+               // System.out.println("GRID HEIGHT: "+gridPane.getTranslateY());
                 if(System.currentTimeMillis()-oldtime>=200)
                 {
                     if(ball.getTranslateY()<=-25)
@@ -519,6 +581,7 @@ public class Game extends Application implements Serializable {
                         translateTransition.setByY(25);
                         translateTransition.setCycleCount(1);
                         translateTransition.play();
+
                     }
                     else {
                         if(gridPane.getTranslateY()>=25) {
@@ -529,10 +592,18 @@ public class Game extends Application implements Serializable {
                             translateTransition.play();
                         }
                     }
+                    if(gridPane.getTranslateY()>=1600){
+                        gridPane.setTranslateY(4);
+                        gridPane.getChildren().remove(star);
+                        pos_star=4;
+                        gridPane.add(star, 0, pos_star);
+                        System.out.println("SEYYYYYYYYYYYYYYYYYTTTTTTTTT");
+                    }
                 }
+                int count=0;
+
             }
         }.start();
-
         java.awt.Color pink= new java.awt.Color(255,20,147);
         java.awt.Color blue= java.awt.Color.BLUE;
         java.awt.Color aqua= java.awt.Color.CYAN;
@@ -544,14 +615,16 @@ public class Game extends Application implements Serializable {
                 if(btn1.isPressed()){
                     System.out.println("HERE");
                     //sleep(5000);
+                    SaveArray[0]=score;
+                    SaveArray[1]= ball.getTranslateY();
+                    SaveArray[2]=gridPane.getTranslateY();
                     stop();
                     //MainMenuGUI(stage);
-                    PauseGameGUI(stage,scene);
+                    PauseGameGUI(stage,scene,SaveArray);
                 }
                 else if(btn2.isPressed()){
                     System.out.println("EXIT");
                     stop();
-                    return;
                 }
                 else{
                     Bounds bounds = ball.getBoundsInLocal();
@@ -574,19 +647,31 @@ public class Game extends Application implements Serializable {
 
                     if( d.equals(blue) || d.equals(pink) || d.equals(aqua) || d2.equals(blue) || d2.equals(pink) || d2.equals(aqua))
                     {
-                        System.out.println(d);
+                       //System.out.println(d);
                         System.out.println("end");
                         stop();
-                        MainMenuGUI(stage);
+                        GameScoreGUI(stage,scene);
+                        //MainMenuGUI(stage);
                     }
                     if( d.equals(java.awt.Color.WHITE) || d2.equals(java.awt.Color.WHITE))
                     {
-                        gridPane.getChildren().remove(star);
-                        score++;
-                        text.setText("SCORE:"+score);
-                        pos_star= pos_star-1;
-                        gridPane.add(star, 0, pos_star);
-                        gridPane.setHalignment(root5, HPos.CENTER);
+                        if(gridPane.getTranslateY()<1550){
+                            gridPane.getChildren().remove(star);
+                            score++;
+                            text.setText("SCORE:"+score);
+                            pos_star= pos_star-1;
+                            gridPane.add(star, 0, pos_star);
+                            GridPane.setHalignment(root5, HPos.CENTER);
+
+                            String source = new File("Music/star.wav").toURI().toString();
+                            Media media = null;
+                            media = new Media(source);
+                            MediaPlayer mediaPlayer = new MediaPlayer(media);
+                            mediaPlayer.setCycleCount(1);
+                            mediaPlayer.setAutoPlay(true);
+                            mediaPlayer.play();
+                        }
+
                     }
                 }
             }
@@ -607,12 +692,80 @@ public class Game extends Application implements Serializable {
         stage.show();
 
     }
-    public void moveball(GridPane gridPane) {
+    public void Moveball(GridPane gridPane) {
         TranslateTransition translateTransition = new TranslateTransition();
         translateTransition.setDuration(Duration.millis(100));
         translateTransition.setNode(gridPane);
         translateTransition.setByY(35);
         translateTransition.play();
     }
+    public double[] deserialize() throws IOException,ClassNotFoundException {
+        ObjectInputStream in = null;
+        Game retrieve=null;
+        try {
+            in = new ObjectInputStream (new FileInputStream("out.txt"));
+            retrieve= (Game) in.readObject();
+        } finally {
+            assert in != null;
+            in.close();
+        }
+        return retrieve.SaveArray;
+    }
+    public void serialize() throws IOException {
+        ObjectOutputStream out = null;
+        try {
+            out = new ObjectOutputStream (new FileOutputStream("out.txt"));
+            out.writeObject(this);
+        } finally {
+            assert out != null;
+            out.close();
+        }
+    }
+    public void GameScoreGUI(Stage stage,Scene scene){
+        stage.setTitle("GAME OVER");
+        stage.setHeight(695);
+        stage.setWidth(600);
+        stage.setResizable(false);
+        Pane parent=new Pane();
+        if(score>=bestScore){
+            bestScore=score;
+        }
+        BackgroundImage myBI= new BackgroundImage(new Image("mainbg.jpg",600,660,false,true),
+                BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
+                BackgroundSize.DEFAULT);
+        Text text = new Text();
+        text.setText("SCORE: "+score);
+        text.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 40));
+        text.setFill(Color.WHITE);
+        text.setX(160);
+        text.setY(280);
+        Text text2 = new Text();
+        text2.setText("BEST SCORE: "+bestScore);
+        text2.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 35));
+        text2.setFill(Color.WHITE);
+        text2.setX(140);
+        text2.setY(350);
+        Button btn3 = new Button("Exit to Main Menu");
+        btn3.setMinSize(150, 25);
+        btn3.setLayoutX(200);
+        btn3.setLayoutY(400);
+        btn3.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 30));
+//        btn3.setStyle("-fx-font-size: 1.5em; ");
+        btn3.setStyle("-fx-font-size: 2em;" +
+                "-fx-min-width: 80px; -fx-min-height: 80px;" +
+                " -fx-max-width: 250px; -fx-max-height: 188px;" +
+                "-fx-background-color: #2C3539;" +
+                "-fx-text-fill:#ffffff;");
+        btn3.setOnAction(e->{
+            System.out.println("Pressed button 3 in exit menu");
+            stage.close();
+            MainMenuGUI(new Stage());
+        });
+        parent.getChildren().addAll(text,text2,btn3);
+        parent.setBackground(new Background(myBI));
+        scene.setRoot(parent);
+        stage.setScene(scene);
+        stage.show();
 
+    }
 }

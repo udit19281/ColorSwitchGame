@@ -240,7 +240,6 @@ class CircleObstacle extends Obstacle{
         rotateTransition.setAutoReverse(false);
         rotateTransition.play();
 
-
         Scale scale = new Scale();
         scale.setPivotX(150);
         scale.setPivotY(250);
@@ -248,6 +247,138 @@ class CircleObstacle extends Obstacle{
         scale.setY(0.8);
         root.getTransforms().addAll(scale);
         return root;
+    }
+    public Group Big_circle(){
+        Arc arc1=new Arc();
+        Arc arc2=new Arc();
+        Arc arc3=new Arc();
+        Arc arc4=new Arc();
+        arc1.setType(ArcType.ROUND);
+        arc2.setType(ArcType.ROUND);
+        arc3.setType(ArcType.ROUND);
+        arc4.setType(ArcType.ROUND);
+
+        arc1.setCenterX(150.0f);
+        arc1.setCenterY(250.0f);
+        arc2.setCenterX(150.0f);
+        arc2.setCenterY(250.0f);
+        arc3.setCenterX(150.0f);
+        arc3.setCenterY(250.0f);
+        arc4.setCenterX(150.0f);
+        arc4.setCenterY(250.0f);
+
+        arc1.setRadiusX(150.0f);
+        arc1.setRadiusY(150.0f);
+        arc2.setRadiusX(150.0f);
+        arc2.setRadiusY(150.0f);
+        arc3.setRadiusX(150.0f);
+        arc3.setRadiusY(150.0f);
+        arc4.setRadiusX(150.0f);
+        arc4.setRadiusY(150.0f);
+
+        arc1.setStartAngle(0.0f);
+        arc2.setStartAngle(90.0f);
+        arc3.setStartAngle(180.0f);
+        arc4.setStartAngle(270.0f);
+
+        arc1.setLength(100.0f);
+        arc2.setLength(100.0f);
+        arc3.setLength(100.0f);
+        arc4.setLength(100.0f);
+
+        Circle circ1=new Circle(150.0f,250.0f,135.0f);
+        Circle circ2=new Circle(150.0f,250.0f,135.0f);
+        Circle circ3=new Circle(150.0f,250.0f,135.0f);
+        Circle circ4=new Circle(150.0f,250.0f,135.0f);
+
+        Shape clip1= Shape.subtract(arc1,circ1);
+        clip1.setFill(Color.AQUA);
+        Shape clip2= Shape.subtract(arc2,circ2);
+        clip2.setFill(Color.BLUE);
+        Shape clip3= Shape.subtract(arc3,circ3);
+        clip3.setFill(Color.YELLOW);
+        Shape clip4= Shape.subtract(arc4,circ4);
+        clip4.setFill(Color.DEEPPINK);
+
+        Group root=new Group(clip1,clip2,clip3,clip4);
+        Arc arc11=new Arc();
+        Arc arc22=new Arc();
+        Arc arc33=new Arc();
+        Arc arc44=new Arc();
+        arc11.setType(ArcType.ROUND);
+        arc22.setType(ArcType.ROUND);
+        arc33.setType(ArcType.ROUND);
+        arc44.setType(ArcType.ROUND);
+
+        arc11.setCenterX(150.0f);
+        arc11.setCenterY(250.0f);
+        arc22.setCenterX(150.0f);
+        arc22.setCenterY(250.0f);
+        arc33.setCenterX(150.0f);
+        arc33.setCenterY(250.0f);
+        arc44.setCenterX(150.0f);
+        arc44.setCenterY(250.0f);
+
+        arc11.setRadiusX(100.0f);
+        arc11.setRadiusY(100.0f);
+        arc22.setRadiusX(100.0f);
+        arc22.setRadiusY(100.0f);
+        arc33.setRadiusX(100.0f);
+        arc33.setRadiusY(100.0f);
+        arc44.setRadiusX(100.0f);
+        arc44.setRadiusY(100.0f);
+
+        arc11.setStartAngle(0.0f);
+        arc22.setStartAngle(90.0f);
+        arc33.setStartAngle(180.0f);
+        arc44.setStartAngle(270.0f);
+
+        arc11.setLength(100.0f);
+        arc22.setLength(100.0f);
+        arc33.setLength(100.0f);
+        arc44.setLength(100.0f);
+
+        Circle circ11=new Circle(150.0f,250.0f,85.0f);
+        Circle circ22=new Circle(150.0f,250.0f,85.0f);
+        Circle circ33=new Circle(150.0f,250.0f,85.0f);
+        Circle circ44=new Circle(150.0f,250.0f,85.0f);
+
+        Shape clip11= Shape.subtract(arc11,circ11);
+        clip11.setFill(Color.AQUA);
+        Shape clip22= Shape.subtract(arc22,circ22);
+        clip22.setFill(Color.BLUE);
+        Shape clip33= Shape.subtract(arc33,circ33);
+        clip33.setFill(Color.YELLOW);
+        Shape clip44= Shape.subtract(arc44,circ44);
+        clip44.setFill(Color.DEEPPINK);
+
+        Group root2=new Group(clip11,clip22,clip33,clip44);
+//        Scene scene=new Scene(root,600,600);
+        RotateTransition rotateTransition2 = new RotateTransition();
+        rotateTransition2.setNode(root2);
+        rotateTransition2.setDuration(Duration.millis(3450));
+        rotateTransition2.setByAngle(360);
+        rotateTransition2.setCycleCount(200);
+        rotateTransition2.setAutoReverse(false);
+        rotateTransition2.play();
+
+        RotateTransition rotateTransition = new RotateTransition();
+        rotateTransition.setNode(root);
+        rotateTransition.setDuration(Duration.millis(3500));
+        rotateTransition.setByAngle(360);
+        rotateTransition.setCycleCount(200);
+        rotateTransition.setAutoReverse(false);
+        rotateTransition.play();
+
+        Scale scale = new Scale();
+        scale.setPivotX(150);
+        scale.setPivotY(250);
+        scale.setX(0.8);
+        scale.setY(0.8);
+        root.getTransforms().addAll(scale);
+        root2.getTransforms().addAll(scale);
+        Group root3=new Group(root,root2);
+        return root3;
     }
 }
 class SquareObstacle extends Obstacle{
@@ -347,7 +478,7 @@ class PlusObstacle extends Obstacle{
         Group root = new Group(rectangle,rectangle2,rectangle3,rectangle4);
         RotateTransition rotateTransition = new RotateTransition();
         rotateTransition.setNode(root);
-        rotateTransition.setDuration(Duration.millis(9000));
+        rotateTransition.setDuration(Duration.millis(8500));
         rotateTransition.setByAngle(360);
         rotateTransition.setCycleCount(500);
         rotateTransition.setAutoReverse(false);
