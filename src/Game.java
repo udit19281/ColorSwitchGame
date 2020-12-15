@@ -31,6 +31,7 @@ import java.util.Random;
 public class Game extends Application implements Serializable {
     private static final long serialVersionUID = 40L;
     transient private static long oldtime;
+    private static boolean IsClicked;
     transient private static int pos_star;
     transient private static int score;
     transient private CircleObstacle Circle;
@@ -46,11 +47,12 @@ public class Game extends Application implements Serializable {
         Circle=new CircleObstacle();
         Line=new LineObstacle();
         Plus=new PlusObstacle();
+        IsClicked=false;
         Square=new SquareObstacle();
         Star=new Star();
         colorswitcher= new Colorswitcher();
         bestScore=0;
-        SaveArray=new double[4];
+        SaveArray=new double[5];
     }
     @Override
     public void start(Stage stage) throws Exception {
@@ -531,7 +533,7 @@ public class Game extends Application implements Serializable {
         GridPane.setHalignment(switcher, HPos.CENTER);
 
         gridPane.add(star, 0, 5); //column
-        pos_star= GridPane.getRowIndex(star);
+
         GridPane.setHalignment(star, HPos.CENTER);
 
         Button btn3 = new Button();
@@ -557,11 +559,21 @@ public class Game extends Application implements Serializable {
             gridPane.setTranslateY(SaveArray[2]);
             ball.setTranslateY(SaveArray[1]);
             bestScore=(int)SaveArray[3];
+            pos_star= (int)SaveArray[4];
+            IsClicked=false;
+         gridPane.getChildren().remove(star);
+            gridPane.add(star, 0, pos_star);
+        }
+        else{
+            pos_star= GridPane.getRowIndex(star);
         }
         oldtime = System.currentTimeMillis();
+
         EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent e) {
+
+
                 oldtime = System.currentTimeMillis();
                 if(ball.getTranslateY()>-100) {
                     TranslateTransition translateTransition = new TranslateTransition();
@@ -577,11 +589,15 @@ public class Game extends Application implements Serializable {
             }
         };
         btn3.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
+
         new AnimationTimer() {
             @Override
             public void handle(long now) {
                // System.out.println("GRID HEIGHT: "+gridPane.getTranslateY());
-                if(System.currentTimeMillis()-oldtime>=200)
+                if(btn3.isPressed()){
+                    IsClicked=true;
+                }
+                if(System.currentTimeMillis()-oldtime>=200 && IsClicked)
                 {
                     if(ball.getTranslateY()<=-25)
                     {
@@ -602,43 +618,21 @@ public class Game extends Application implements Serializable {
                         }
                     }
                 }
-                int count=0;
-
-            }
-        }.start();
-
-        new AnimationTimer() {
-            @Override
-            public void handle(long now) {
                 if(gridPane.getTranslateY()>=1920){
                     gridPane.setTranslateY(4);
                     gridPane.getChildren().remove(star);
                     pos_star=5;
                     gridPane.add(star, 0, pos_star);
-                    gridPane.add(switcher, 0, 2);
+                    if(gridPane.getChildren().contains(switcher)){
+                        gridPane.getChildren().remove(switcher);
+                        gridPane.add(switcher, 0, 2);
+                    }
+                    else{
+                        gridPane.add(switcher, 0, 2);
+                    }
                     System.out.println("SEYYYYYYYYYYYYYYYYYTTTTTTTTT");
                 }
-            }
-            }.start();
 
-
-        new AnimationTimer() {
-            @Override
-            public void handle(long now) {
-                if (btn1.isPressed()) {
-                    System.out.println("HERE");
-                    //sleep(5000);
-                    SaveArray[0] = score;
-                    SaveArray[1] = ball.getTranslateY();
-                    SaveArray[2] = gridPane.getTranslateY();
-                    SaveArray[3] = bestScore;
-                    stop();
-                    //MainMenuGUI(stage);
-                    PauseGameGUI(stage, scene, SaveArray);
-                } else if (btn2.isPressed()) {
-                    System.out.println("EXIT");
-                    stop();
-                }
             }
         }.start();
 
@@ -650,6 +644,22 @@ public class Game extends Application implements Serializable {
         new AnimationTimer() {
             @Override
             public void handle(long now) {
+                if (btn1.isPressed()) {
+                    System.out.println("HERE");
+                    //sleep(5000);
+                    SaveArray[0] = score;
+                    SaveArray[1] = ball.getTranslateY();
+                    SaveArray[2] = gridPane.getTranslateY();
+                    SaveArray[3] = bestScore;
+                    SaveArray[4]= GridPane.getRowIndex(star);
+                    stop();
+                    //MainMenuGUI(stage);
+                    PauseGameGUI(stage, scene, SaveArray);
+                } else if (btn2.isPressed()) {
+                    System.out.println("EXIT");
+                    stop();
+                }
+                else{
                     Bounds bounds = ball.getBoundsInLocal();
                     Bounds screenBounds = ball.localToScreen(bounds);
                     int x = (int) screenBounds.getMinX()+(int) (screenBounds.getWidth()/2);
@@ -668,10 +678,10 @@ public class Game extends Application implements Serializable {
                     }
                     if( d.equals(colors[0]) || d.equals(colors[1]) || d.equals(colors[2]) || d2.equals(colors[0]) || d2.equals(colors[1]) || d2.equals(colors[2]))
                     {
-                       //System.out.println(d);
+                        //System.out.println(d);
                         System.out.println("end");
-                        stop();
-                        GameScoreGUI(stage,scene);
+                        // stop();
+                        //GameScoreGUI(stage,scene);
                     }
                     if(screenBounds.intersects(star.localToScreen(star.getBoundsInLocal())))
                     {
@@ -706,6 +716,8 @@ public class Game extends Application implements Serializable {
                         awt2=temp;
                         ball.setFill(awtToJavaFX(awt2));
                     }
+                }
+
             }
 
         }.start();
