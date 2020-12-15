@@ -7,7 +7,6 @@ import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
-import javafx.geometry.VPos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -26,10 +25,15 @@ import javafx.util.Duration;
 
 import java.awt.*;
 import java.io.*;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Objects;
 import java.util.Random;
 
 public class Game extends Application implements Serializable {
     private static final long serialVersionUID = 40L;
+    //transient private static String FileName;
     transient private static long oldtime;
     private static boolean IsClicked;
     transient private static int pos_star;
@@ -48,6 +52,7 @@ public class Game extends Application implements Serializable {
         Line=new LineObstacle();
         Plus=new PlusObstacle();
         IsClicked=false;
+
         Square=new SquareObstacle();
         Star=new Star();
         colorswitcher= new Colorswitcher();
@@ -61,8 +66,8 @@ public class Game extends Application implements Serializable {
         media = new Media(source);
         MediaPlayer mediaPlayer = new MediaPlayer(media);
         mediaPlayer.setCycleCount(200);
-        mediaPlayer.setAutoPlay(true);
-        mediaPlayer.play();
+      //  mediaPlayer.setAutoPlay(true);
+      //  mediaPlayer.play();
         MainMenuGUI(stage);
     }
     public void MainMenuGUI(Stage stage) {
@@ -300,10 +305,40 @@ public class Game extends Application implements Serializable {
         text.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 25));
         text.setFill(Color.WHITE);
 
-        Button btn1 = new Button("Game 1");
+        VBox Contents=new VBox();
+        ArrayList<String> SavedGameFileName=new ArrayList<String>();
+        File folder = new File("SavedGames/");
+        File[] listOfFiles = folder.listFiles();
+        Button button;
+        ArrayList<Button> buttonArrayList=new ArrayList<Button>();
+
+        for (int i = 0; i < Objects.requireNonNull(listOfFiles).length; i++) {
+            if (listOfFiles[i].isFile()) {
+                SavedGameFileName.add(i,listOfFiles[i].getName());
+                button=new Button(listOfFiles[i].getName());
+                buttonArrayList.add(button);
+                button.setStyle("-fx-font-size: 1.5em;" +
+                        "-fx-background-color: #000000;" +
+                        "-fx-text-fill:#ffffff;");
+              String FileName=SavedGameFileName.get(i);
+                button.setOnAction(actionEvent -> {
+                    try{
+                        SaveArray=deserialize(FileName);
+                        System.out.println("Done Deserialize");
+                        GamePlay(stage,scene,true);
+                    }
+                    catch (Exception err){
+                        System.out.println(err);
+                        System.out.println("ERROR IN DESERIALIZE");
+                    }
+                });
+                Contents.getChildren().add(button);
+            }
+        }
+
+        Button btn1 = new Button("Delete All");
         btn1.setMinSize(150, 25);
-        btn1.setLayoutX(250);
-        btn1.setLayoutY(200);
+
 //        btn1.setStyle("-fx-font-size: 1.5em; ");
         btn1.setStyle("-fx-font-size: 2em;" +
                 "-fx-min-width: 80px; -fx-min-height: 80px;" +
@@ -311,34 +346,19 @@ public class Game extends Application implements Serializable {
                 "-fx-background-color: #000000;" +
                 "-fx-text-fill:#ffffff;");
         btn1.setOnAction(e->{
-            System.out.println("Load Game1");
+            System.out.println("Removed Saved Games");
            // Save save=new Save();
-            try{
-                SaveArray=deserialize();
-                System.out.println("Done Deserialize");
-                GamePlay(stage,scene,true);
-            }
-            catch (Exception err){
-                System.out.println(err);
-                System.out.println("ERROR IN DESERIALIZE");
-            }
-
+            File fold = new File("SavedGames/");
+            for(File file: Objects.requireNonNull(fold.listFiles()))
+                if (!file.isDirectory())
+                    file.delete();
+                MainMenuGUI(stage);
         });
-
-        Button btn2 = new Button("Game 2");
-        btn2.setMinSize(150, 25);
-        btn2.setLayoutX(250);
-        btn2.setLayoutY(250);
-//        btn2.setStyle("-fx-font-size: 1.5em; ");
-        btn2.setStyle("-fx-font-size: 2em;" +
-                "-fx-min-width: 80px; -fx-min-height: 80px;" +
-                " -fx-max-width: 138px; -fx-max-height: 138px;" +
-                "-fx-background-color: #000000;" +
-                "-fx-text-fill:#ffffff;");
-        btn2.setOnAction(e->{
-            System.out.println("Pressed button 2 in pause menu");
-        });
-        parent.getChildren().addAll(text,btn1,btn2);
+        Contents.setSpacing(5);
+        Contents.setLayoutX(200);
+        Contents.setLayoutY(250);
+        Contents.getChildren().add(btn1);
+        parent.getChildren().addAll(text,Contents);
         stage.setScene(scene);
         stage.show();
     }
@@ -550,7 +570,8 @@ public class Game extends Application implements Serializable {
                 MediaPlayer mediaPlayer = new MediaPlayer(media);
                 mediaPlayer.setCycleCount(1);
                 //mediaPlayer.setAutoPlay(true);
-                mediaPlayer.play();
+
+            //  mediaPlayer.play();
 
         });
         if(CallFromSave){
@@ -680,8 +701,8 @@ public class Game extends Application implements Serializable {
                     {
                         //System.out.println(d);
                         System.out.println("end");
-                        // stop();
-                        //GameScoreGUI(stage,scene);
+                         stop();
+                        GameScoreGUI(stage,scene);
                     }
                     if(screenBounds.intersects(star.localToScreen(star.getBoundsInLocal())))
                     {
@@ -701,7 +722,7 @@ public class Game extends Application implements Serializable {
                             MediaPlayer mediaPlayer = new MediaPlayer(media);
                             mediaPlayer.setCycleCount(1);
                             mediaPlayer.setAutoPlay(true);
-                            mediaPlayer.play();
+                       //     mediaPlayer.play();
                         }
                     }
                     else if(screenBounds.intersects(switcher.localToScreen(switcher.getBoundsInLocal())))
@@ -751,11 +772,12 @@ public class Game extends Application implements Serializable {
         translateTransition.setByY(35);
         translateTransition.play();
     }
-    public double[] deserialize() throws IOException,ClassNotFoundException {
+    public double[] deserialize(String fileName) throws IOException,ClassNotFoundException {
+
         ObjectInputStream in = null;
         Game retrieve=null;
         try {
-            in = new ObjectInputStream (new FileInputStream("out.txt"));
+            in = new ObjectInputStream (new FileInputStream("SavedGames/"+fileName));
             retrieve= (Game) in.readObject();
         } finally {
             assert in != null;
@@ -764,9 +786,12 @@ public class Game extends Application implements Serializable {
         return retrieve.SaveArray;
     }
     public void serialize() throws IOException {
+        Date date = new Date() ;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss") ;
+        String file = ("SavedGames/"+dateFormat.format(date) + ".txt") ;
         ObjectOutputStream out = null;
         try {
-            out = new ObjectOutputStream (new FileOutputStream("out.txt"));
+            out = new ObjectOutputStream (new FileOutputStream(file));
             out.writeObject(this);
         } finally {
             assert out != null;
