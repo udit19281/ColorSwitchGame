@@ -46,7 +46,7 @@ public class Game extends Application implements Serializable {
         Square=new SquareObstacle();
         Star=new Star();
         bestScore=0;
-        SaveArray=new double[3];
+        SaveArray=new double[4];
     }
     @Override
     public void start(Stage stage) throws Exception {
@@ -435,6 +435,7 @@ public class Game extends Application implements Serializable {
     public void GamePlay (Stage stage,Scene scene,boolean CallFromSave) {
         if(CallFromSave){
             score=(int)SaveArray[0];
+            bestScore=(int)SaveArray[3];
         }
         else{
             score =0;
@@ -547,6 +548,7 @@ public class Game extends Application implements Serializable {
             score=(int)SaveArray[0];
             gridPane.setTranslateY(SaveArray[2]);
             ball.setTranslateY(SaveArray[1]);
+            bestScore=(int)SaveArray[3];
         }
         oldtime = System.currentTimeMillis();
         EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
@@ -618,6 +620,7 @@ public class Game extends Application implements Serializable {
                     SaveArray[0]=score;
                     SaveArray[1]= ball.getTranslateY();
                     SaveArray[2]=gridPane.getTranslateY();
+                    SaveArray[3]=bestScore;
                     stop();
                     //MainMenuGUI(stage);
                     PauseGameGUI(stage,scene,SaveArray);

@@ -487,8 +487,8 @@ class PlusObstacle extends Obstacle{
         Scale scale = new Scale();
         scale.setPivotX(195);
         scale.setPivotY(270);
-        scale.setX(1.7);
-        scale.setY(1.7);
+        scale.setX(1.1);
+        scale.setY(1.1);
         root.getTransforms().addAll(scale);
 
         return root;
