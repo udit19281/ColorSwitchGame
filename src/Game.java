@@ -7,6 +7,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
+import javafx.geometry.VPos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -25,6 +26,7 @@ import javafx.util.Duration;
 
 import java.awt.*;
 import java.io.*;
+import java.util.Random;
 
 public class Game extends Application implements Serializable {
     private static final long serialVersionUID = 40L;
@@ -36,6 +38,7 @@ public class Game extends Application implements Serializable {
     transient private PlusObstacle Plus;
     transient private SquareObstacle Square;
     transient private Star Star;
+    transient private Colorswitcher colorswitcher;
     private int bestScore;
     private double SaveArray[];
 
@@ -45,6 +48,7 @@ public class Game extends Application implements Serializable {
         Plus=new PlusObstacle();
         Square=new SquareObstacle();
         Star=new Star();
+        colorswitcher= new Colorswitcher();
         bestScore=0;
         SaveArray=new double[4];
     }
@@ -471,7 +475,7 @@ public class Game extends Application implements Serializable {
 
         javafx.scene.shape.Circle ball=new Circle();
         ball.setRadius(12);
-        ball.setLayoutX(288);
+        ball.setLayoutX(294);
         ball.setLayoutY(450);
         ball.setFill(Color.YELLOW);
 
@@ -493,6 +497,7 @@ public class Game extends Application implements Serializable {
         ver.setSpacing(10);
         ver.setAlignment(Pos.TOP_LEFT);
 
+        Group switcher= colorswitcher.getObstacle();
         Group star = Star.getObstacle();
         GridPane gridPane = new GridPane();
         //gridPane.setMaxWidth(350);
@@ -501,7 +506,7 @@ public class Game extends Application implements Serializable {
         //gridPane.setPrefHeight(Double.MAX_VALUE);
         gridPane.setVgap(200);
         gridPane.setLayoutX(150);
-        gridPane.setLayoutY(-1600);
+        gridPane.setLayoutY(-1920);
         gridPane.setStyle("-fx-background: transparent; -fx-border-color: transparent;");
         gridPane.setAlignment(Pos.CENTER);
 
@@ -513,16 +518,19 @@ public class Game extends Application implements Serializable {
 
         gridPane.add(root3, 0, 0);
         gridPane.add(root, 0, 1);
-        gridPane.add(root4, 0, 2);
-        gridPane.add(root2, 0, 3);
-        gridPane.add(root5, 0, 4);
+        gridPane.add(root4, 0, 3);
+        gridPane.add(root2, 0, 4);
+        gridPane.add(root5, 0, 5);
+        gridPane.add(switcher, 0, 2);
 
         GridPane.setHalignment(root, HPos.CENTER);
         GridPane.setHalignment(root3, HPos.CENTER);
         GridPane.setHalignment(root2, HPos.CENTER);
         GridPane.setHalignment(root4, HPos.LEFT);
         GridPane.setHalignment(root5, HPos.CENTER);
-        gridPane.add(star, 0, 4); //column
+        GridPane.setHalignment(switcher, HPos.CENTER);
+
+        gridPane.add(star, 0, 5); //column
         pos_star= GridPane.getRowIndex(star);
         GridPane.setHalignment(star, HPos.CENTER);
 
@@ -583,7 +591,6 @@ public class Game extends Application implements Serializable {
                         translateTransition.setByY(25);
                         translateTransition.setCycleCount(1);
                         translateTransition.play();
-
                     }
                     else {
                         if(gridPane.getTranslateY()>=25) {
@@ -594,48 +601,60 @@ public class Game extends Application implements Serializable {
                             translateTransition.play();
                         }
                     }
-                    if(gridPane.getTranslateY()>=1600){
-                        gridPane.setTranslateY(4);
-                        gridPane.getChildren().remove(star);
-                        pos_star=4;
-                        gridPane.add(star, 0, pos_star);
-                        System.out.println("SEYYYYYYYYYYYYYYYYYTTTTTTTTT");
-                    }
                 }
                 int count=0;
 
             }
         }.start();
-        java.awt.Color pink= new java.awt.Color(255,20,147);
-        java.awt.Color blue= java.awt.Color.BLUE;
-        java.awt.Color aqua= java.awt.Color.CYAN;
-        new AnimationTimer() {
 
+        new AnimationTimer() {
             @Override
             public void handle(long now) {
+                if(gridPane.getTranslateY()>=1920){
+                    gridPane.setTranslateY(4);
+                    gridPane.getChildren().remove(star);
+                    pos_star=5;
+                    gridPane.add(star, 0, pos_star);
+                    gridPane.add(switcher, 0, 2);
+                    System.out.println("SEYYYYYYYYYYYYYYYYYTTTTTTTTT");
+                }
+            }
+            }.start();
 
-                if(btn1.isPressed()){
+
+        new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                if (btn1.isPressed()) {
                     System.out.println("HERE");
                     //sleep(5000);
-                    SaveArray[0]=score;
-                    SaveArray[1]= ball.getTranslateY();
-                    SaveArray[2]=gridPane.getTranslateY();
-                    SaveArray[3]=bestScore;
+                    SaveArray[0] = score;
+                    SaveArray[1] = ball.getTranslateY();
+                    SaveArray[2] = gridPane.getTranslateY();
+                    SaveArray[3] = bestScore;
                     stop();
                     //MainMenuGUI(stage);
-                    PauseGameGUI(stage,scene,SaveArray);
-                }
-                else if(btn2.isPressed()){
+                    PauseGameGUI(stage, scene, SaveArray);
+                } else if (btn2.isPressed()) {
                     System.out.println("EXIT");
                     stop();
                 }
-                else{
+            }
+        }.start();
+
+        java.awt.Color colors[] = new java.awt.Color[3];
+        colors[0]= new java.awt.Color(255,20,147);
+        colors[1]= java.awt.Color.BLUE;
+        colors[2]= java.awt.Color.CYAN;
+
+        new AnimationTimer() {
+            @Override
+            public void handle(long now) {
                     Bounds bounds = ball.getBoundsInLocal();
                     Bounds screenBounds = ball.localToScreen(bounds);
                     int x = (int) screenBounds.getMinX()+(int) (screenBounds.getWidth()/2);
                     int y2= (int) screenBounds.getMinY()-1;
                     int y3= (int) screenBounds.getMaxY()+1;
-                    java.awt.Color c = null;
                     java.awt.Color d = null;
                     java.awt.Color d2 = null;
                     try {
@@ -647,22 +666,22 @@ public class Game extends Application implements Serializable {
                     catch (Exception evt) {
                         // System.err.println(evt.getMessage());
                     }
-
-                    if( d.equals(blue) || d.equals(pink) || d.equals(aqua) || d2.equals(blue) || d2.equals(pink) || d2.equals(aqua))
+                    if( d.equals(colors[0]) || d.equals(colors[1]) || d.equals(colors[2]) || d2.equals(colors[0]) || d2.equals(colors[1]) || d2.equals(colors[2]))
                     {
                        //System.out.println(d);
                         System.out.println("end");
                         stop();
                         GameScoreGUI(stage,scene);
-                        //MainMenuGUI(stage);
                     }
-                    if( d.equals(java.awt.Color.WHITE) || d2.equals(java.awt.Color.WHITE))
+                    if(screenBounds.intersects(star.localToScreen(star.getBoundsInLocal())))
                     {
-                        if(gridPane.getTranslateY()<1550){
+                        if(gridPane.getTranslateY()<1890){
                             gridPane.getChildren().remove(star);
                             score++;
                             text.setText("SCORE:"+score);
                             pos_star= pos_star-1;
+                            if(pos_star==2)
+                                pos_star=pos_star-1;
                             gridPane.add(star, 0, pos_star);
                             GridPane.setHalignment(root5, HPos.CENTER);
 
@@ -674,9 +693,19 @@ public class Game extends Application implements Serializable {
                             mediaPlayer.setAutoPlay(true);
                             mediaPlayer.play();
                         }
-
                     }
-                }
+                    else if(screenBounds.intersects(switcher.localToScreen(switcher.getBoundsInLocal())))
+                    {
+                        gridPane.getChildren().remove(switcher);
+                        Random rand = new Random();
+                        int random = rand.nextInt(3);
+                        java.awt.Color temp=null;
+                        java.awt.Color awt2=toawt((Color)ball.getFill());
+                        temp=colors[random];
+                        colors[random]=awt2;
+                        awt2=temp;
+                        ball.setFill(awtToJavaFX(awt2));
+                    }
             }
 
         }.start();
@@ -694,6 +723,14 @@ public class Game extends Application implements Serializable {
         stage.setScene(scene);
         stage.show();
 
+    }
+    public Color awtToJavaFX(java.awt.Color c) {
+        return javafx.scene.paint.Color.rgb(c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha() / 255.0);
+    }
+    public java.awt.Color toawt(Color fx)
+    {
+        java.awt.Color awtColor = new java.awt.Color((float) fx.getRed(),(float) fx.getGreen(), (float) fx.getBlue(), (float) fx.getOpacity());
+        return awtColor;
     }
     public void Moveball(GridPane gridPane) {
         TranslateTransition translateTransition = new TranslateTransition();

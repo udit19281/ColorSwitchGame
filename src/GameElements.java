@@ -59,6 +59,21 @@ class Star extends GameElements{
     }
 
 }
+
+class Colorswitcher extends GameElements{
+    @Override
+    public Group getObstacle() {
+        Image image = new Image("colorswitcher.png");
+        ImageView imageView = new ImageView(image);
+        imageView.setFitHeight(40);
+        imageView.setFitWidth(40);
+        imageView.setPreserveRatio(true);
+        Group root=new Group(imageView);
+        return root;
+    }
+}
+
+
 class Obstacle extends GameElements{
     private String type_of_obstacle;
 
