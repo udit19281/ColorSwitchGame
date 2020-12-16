@@ -1,7 +1,4 @@
-import javafx.animation.FadeTransition;
-import javafx.animation.RotateTransition;
-import javafx.animation.ScaleTransition;
-import javafx.animation.TranslateTransition;
+import javafx.animation.*;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -94,99 +91,32 @@ class LineObstacle extends Obstacle{
     @Override
     public Group getObstacle() {
         Rectangle rectangle = new Rectangle();
+        rectangle.setX(-70);
+        rectangle.setWidth(120.0f);
+        rectangle.setHeight(15.0f);
+        rectangle.setFill(Color.BLUE);
+        FillTransition ft = new FillTransition(Duration.millis(3000), rectangle, Color.BLUE, Color.DEEPPINK);
+        ft.setCycleCount(2000);
+        ft.setAutoReverse(true);
+        ft.play();
         Rectangle rectangle2 = new Rectangle();
-        Rectangle rectangle3 = new Rectangle();
-        Rectangle rectangle4 = new Rectangle();
-        Rectangle rectangle5 = new Rectangle();
-        Rectangle rectangle6 = new Rectangle();
-        Rectangle rectangle7 = new Rectangle();
-        Rectangle rectangle8 = new Rectangle();
-
-        rectangle.setX(15.0f);
-        rectangle.setY(75.0f);
-        rectangle.setWidth(15.0f);
-        rectangle.setHeight(120.0f);
-        rectangle.setFill(Color.AQUA);
-
-        rectangle2.setX(65.0f);
-        rectangle2.setY(75.0f);
-        rectangle2.setWidth(15.0f);
-        rectangle2.setHeight(120.0f);
+        rectangle2.setWidth(140.0f);
+        rectangle2.setX(50);
+        rectangle2.setHeight(15.0f);
         rectangle2.setFill(Color.YELLOW);
-
-        rectangle3.setX(115.0f);
-        rectangle3.setY(75.0f);
-        rectangle3.setWidth(15.0f);
-        rectangle3.setHeight(120.0f);
-        rectangle3.setFill(Color.BLUE);
-        rectangle4.setX(165.0f);
-        rectangle4.setY(75.0f);
-        rectangle4.setWidth(15.0f);
-        rectangle4.setHeight(120.0f);
-        rectangle4.setFill(Color.DEEPPINK);
-
-        rectangle5.setX(215.0f);
-        rectangle5.setY(75.0f);
-        rectangle5.setWidth(15.0f);
-        rectangle5.setHeight(120.0f);
-        rectangle5.setFill(Color.AQUA);
-
-        rectangle6.setX(265.0f);
-        rectangle6.setY(75.0f);
-        rectangle6.setWidth(15.0f);
-        rectangle6.setHeight(120.0f);
-        rectangle6.setFill(Color.YELLOW);
-        rectangle7.setX(315.0f);
-        rectangle7.setY(75.0f);
-        rectangle7.setWidth(15.0f);
-        rectangle7.setHeight(120.0f);
-        rectangle7.setFill(Color.BLUE);
-
-        rectangle8.setX(365.0f);
-        rectangle8.setY(75.0f);
-        rectangle8.setWidth(15.0f);
-        rectangle8.setHeight(120.0f);
-        rectangle8.setFill(Color.DEEPPINK);
-        Group root1 = new Group(rectangle,rectangle2,rectangle3,rectangle4);
-        Group root2 = new Group(rectangle5,rectangle6,rectangle7,rectangle8);
+        FillTransition ft2 = new FillTransition(Duration.millis(500), rectangle2, Color.YELLOW, Color.AQUA);
+        ft2.setCycleCount(2000);
+        ft2.setAutoReverse(true);
+        ft2.play();
+        Group root = new Group(rectangle,rectangle2);
         TranslateTransition translate = new TranslateTransition();
-        translate.setByX(400);
-        translate.setToX(200);
-        translate.setDuration(Duration.millis(3000));
-        translate.setCycleCount(500);
+        translate.setToX(70);
+        translate.setDuration(Duration.millis(1500));
+        translate.setCycleCount(2000);
         translate.setAutoReverse(true);
-        translate.setNode(root1);
+        translate.setNode(root);
         translate.play();
-
-        TranslateTransition translate2 = new TranslateTransition();
-        translate2.setByX(400);
-        translate2.setToX(-200);
-        translate2.setDuration(Duration.millis(3000));
-        translate2.setCycleCount(500);
-        translate2.setAutoReverse(true);
-        translate2.setNode(root2);
-        translate2.play();
-
-        FadeTransition fade = new FadeTransition();
-        fade.setDuration(Duration.millis(6000));
-        fade.setFromValue(0);
-        fade.setToValue(1);
-        fade.setCycleCount(1000);
-        fade.setAutoReverse(false);
-        fade.setNode(root1);
-        fade.play();
-
-        FadeTransition fade2 = new FadeTransition();
-        fade2.setDuration(Duration.millis(6000));
-        fade2.setFromValue(1);
-        fade2.setToValue(0);
-        fade2.setCycleCount(1000);
-        fade2.setAutoReverse(false);
-        fade2.setNode(root2);
-        fade2.play();
-        Group root = new Group(root1,root2);
         return root;
-
     }
 }
 class CircleObstacle extends Obstacle{
@@ -371,7 +301,7 @@ class CircleObstacle extends Obstacle{
 //        Scene scene=new Scene(root,600,600);
         RotateTransition rotateTransition2 = new RotateTransition();
         rotateTransition2.setNode(root2);
-        rotateTransition2.setDuration(Duration.millis(3450));
+        rotateTransition2.setDuration(Duration.millis(3800));
         rotateTransition2.setByAngle(360);
         rotateTransition2.setCycleCount(200);
         rotateTransition2.setAutoReverse(false);
@@ -379,7 +309,7 @@ class CircleObstacle extends Obstacle{
 
         RotateTransition rotateTransition = new RotateTransition();
         rotateTransition.setNode(root);
-        rotateTransition.setDuration(Duration.millis(3500));
+        rotateTransition.setDuration(Duration.millis(3800));
         rotateTransition.setByAngle(360);
         rotateTransition.setCycleCount(200);
         rotateTransition.setAutoReverse(false);
