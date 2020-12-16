@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 public class Game extends Application implements Serializable {
     transient private Player player;
@@ -63,16 +64,16 @@ public class Game extends Application implements Serializable {
         bestScore=0;
         SaveArray=new double[5];
     }
+ transient private MediaPlayer mediaPlayer;
     @Override
     public void start(Stage stage) throws Exception {
         String source = new File("Music/track.mp3").toURI().toString();
         Media media = null;
         media = new Media(source);
-        MediaPlayer mediaPlayer = new MediaPlayer(media);
-        mediaPlayer.setCycleCount(200);
-        // mediaPlayer.setAutoPlay(true);
-        //   mediaPlayer.play();
-
+        mediaPlayer = new MediaPlayer(media);
+        mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+         mediaPlayer.setAutoPlay(true);
+         mediaPlayer.play();
         MainMenuGUI(stage);
     }
     public void MainMenuGUI(Stage stage) {
@@ -519,6 +520,7 @@ public class Game extends Application implements Serializable {
         });
 
         javafx.scene.shape.Circle ball= player.getBall().getBall();
+        ball.setFill(Color.YELLOW);
 
         Image image = new Image("Images/text.png");
         ImageView imageView = new ImageView(image);
@@ -555,7 +557,9 @@ public class Game extends Application implements Serializable {
         Group root2 = Square.getObstacle();
         Group root3 = Circle.getObstacle();
         Group root4 = Plus.getObstacle();
-        Group root5= Circle.getObstacle();
+        CircleObstacle Circle2=new CircleObstacle();
+
+        Group root5= Circle2.getObstacle();
 
         gridPane.add(root3, 0, 0);
         gridPane.add(root, 0, 1);
@@ -612,6 +616,7 @@ public class Game extends Application implements Serializable {
         EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent e) {
+
                 System.out.println(Circle.getRotation());
                 oldtime = System.currentTimeMillis();
                 if(ball.getTranslateY()>-100) {
@@ -634,6 +639,8 @@ public class Game extends Application implements Serializable {
             public void handle(long now) {
                 // System.out.println("GRID HEIGHT: "+gridPane.getTranslateY());
                 if(btn3.isPressed()){
+
+                 //   System.out.println("Button clicked 1");
                     IsClicked=true;
                 }
                 if(System.currentTimeMillis()-oldtime>=200 && IsClicked)
@@ -658,10 +665,6 @@ public class Game extends Application implements Serializable {
                     }
                 }
                 if(gridPane.getTranslateY()>=1920){
-                    Duration dur=Circle.getRotation();
-                    System.out.println("Duratttttttt"+dur);
-                    Circle.SetRotation(dur.subtract(Duration.millis(1000)));
-
                     gridPane.setTranslateY(4);
                     gridPane.getChildren().remove(star);
                     pos_star=5;
@@ -673,7 +676,7 @@ public class Game extends Application implements Serializable {
                     else{
                         gridPane.add(switcher, 0, 2);
                     }
-                    System.out.println("SEYYYYYYYYYYYYYYYYYTTTTTTTTT");
+
                 }
 
             }
@@ -685,9 +688,14 @@ public class Game extends Application implements Serializable {
         colors[2]= java.awt.Color.CYAN;
 
         new AnimationTimer() {
+    int count=0;
             @Override
             public void handle(long now) {
+                if(score%5==0 && score!=0){
+                    count++;
+                }
                 if (btn1.isPressed()) {
+
                     System.out.println("HERE");
                     //sleep(5000);
                     SaveArray[0] = score;
@@ -708,6 +716,7 @@ public class Game extends Application implements Serializable {
                     System.out.println("EXIT");
                     stop();
                 }
+
                 else{
                     Bounds bounds = ball.getBoundsInLocal();
                     Bounds screenBounds = ball.localToScreen(bounds);
@@ -716,21 +725,21 @@ public class Game extends Application implements Serializable {
                     int y3= (int) screenBounds.getMaxY()+1;
                     java.awt.Color d = null;
                     java.awt.Color d2 = null;
+                  //  System.out.println("end101");
                     try {
                         Robot r = new Robot();
                         d = r.getPixelColor(x,y2 );
                         d2 = r.getPixelColor(x,y3 );
-                        // System.out.println(d2);
+                       //  System.out.println("d2"+d2);
                     }
                     catch (Exception evt) {
                         // System.err.println(evt.getMessage());
                     }
                     if( d.equals(colors[0]) || d.equals(colors[1]) || d.equals(colors[2]) || d2.equals(colors[0]) || d2.equals(colors[1]) || d2.equals(colors[2]))
                     {
-                        //System.out.println(d);
-                        System.out.println("end");
-                        stop();
-                        GameScoreGUI(stage,scene);
+
+                       // stop();
+                       // GameScoreGUI(stage,scene);
                     }
                     if(screenBounds.intersects(star.localToScreen(star.getBoundsInLocal())))
                     {
@@ -753,6 +762,20 @@ public class Game extends Application implements Serializable {
                             mediaPlayer.setCycleCount(1);
                             mediaPlayer.setAutoPlay(true);
                             mediaPlayer.play();
+                            if(((score%5)==0)  && (score!=0)){
+                                System.out.println("SPEED increased");
+                                Duration dur1=Circle.getRotation();
+                                Circle.SetRotation(dur1.subtract(Duration.millis(100)));
+                                Duration dur2=Circle.getRotation2();
+                                Circle.SetRotation2(dur2.subtract(Duration.millis(150)));
+                                Duration dur3=Circle2.getRotation();
+                                Circle2.SetRotation(dur3.subtract(Duration.millis(100)));
+                                Duration dur4=Plus.getRotation();
+                                Plus.SetRotation(dur4.subtract(Duration.millis(500)));
+                                Duration dur5=Square.getRotation();
+                                Square.SetRotation(dur5.subtract(Duration.millis(140)));
+                            }
+
                         }
                     }
                     else if(screenBounds.intersects(switcher.localToScreen(switcher.getBoundsInLocal())))
@@ -937,8 +960,8 @@ public class Game extends Application implements Serializable {
                         "-fx-font-size: 20px;" + "-fx-font-weight: 200;" + "-fx-padding: 20px;" + "-fx-border-width:0.22em;"+ "-fx-border-color: #00FFCF;");
         btn3.setOnAction(e->{
             System.out.println("Pressed button 3 in exit menu");
-            stage.close();
-            MainMenuGUI(new Stage());
+           // stage.close();
+            MainMenuGUI(stage);
         });
         if(btn4!=null){
             btn4.setOnAction(e->{

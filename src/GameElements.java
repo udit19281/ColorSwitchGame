@@ -61,7 +61,7 @@ class Star extends GameElements{
         scaleTransition.setNode(imageView);
         scaleTransition.setByY(0.4);
         scaleTransition.setByX(0.4);
-        scaleTransition.setCycleCount(500);
+        scaleTransition.setCycleCount(Animation.INDEFINITE);
         scaleTransition.setAutoReverse(true);
         scaleTransition.play();
 
@@ -110,7 +110,7 @@ class LineObstacle extends Obstacle{
         rectangle.setHeight(15.0f);
         rectangle.setFill(Color.BLUE);
         FillTransition ft = new FillTransition(Duration.millis(3000), rectangle, Color.BLUE, Color.DEEPPINK);
-        ft.setCycleCount(2000);
+        ft.setCycleCount(Animation.INDEFINITE);
         ft.setAutoReverse(true);
         ft.play();
         Rectangle rectangle2 = new Rectangle();
@@ -119,14 +119,14 @@ class LineObstacle extends Obstacle{
         rectangle2.setHeight(15.0f);
         rectangle2.setFill(Color.YELLOW);
         FillTransition ft2 = new FillTransition(Duration.millis(500), rectangle2, Color.YELLOW, Color.AQUA);
-        ft2.setCycleCount(2000);
+        ft2.setCycleCount(Animation.INDEFINITE);
         ft2.setAutoReverse(true);
         ft2.play();
         Group root = new Group(rectangle,rectangle2);
         TranslateTransition translate = new TranslateTransition();
         translate.setToX(70);
         translate.setDuration(Duration.millis(1500));
-        translate.setCycleCount(2000);
+        translate.setCycleCount(Animation.INDEFINITE);
         translate.setAutoReverse(true);
         translate.setNode(root);
         translate.play();
@@ -136,6 +136,10 @@ class LineObstacle extends Obstacle{
 }
 class CircleObstacle extends Obstacle{
     private RotateTransition rotateTransition=null;
+    private RotateTransition rotateTransition2=null;
+    private RotateTransition rotateTransition3=null;
+
+
     @Override
     public Group getObstacle() {
         Arc arc1=new Arc();
@@ -196,7 +200,7 @@ class CircleObstacle extends Obstacle{
         rotateTransition.setNode(root);
         rotateTransition.setDuration(Duration.millis(3000));
         rotateTransition.setByAngle(360);
-        rotateTransition.setCycleCount(200);
+        rotateTransition.setCycleCount(Animation.INDEFINITE);
         rotateTransition.setAutoReverse(false);
         rotateTransition.play();
 
@@ -314,21 +318,21 @@ class CircleObstacle extends Obstacle{
 
         Group root2=new Group(clip11,clip22,clip33,clip44);
 //        Scene scene=new Scene(root,600,600);
-        RotateTransition rotateTransition2 = new RotateTransition();
+        rotateTransition2 = new RotateTransition();
         rotateTransition2.setNode(root2);
         rotateTransition2.setDuration(Duration.millis(3800));
         rotateTransition2.setByAngle(360);
-        rotateTransition2.setCycleCount(200);
+        rotateTransition2.setCycleCount(Animation.INDEFINITE);
         rotateTransition2.setAutoReverse(false);
         rotateTransition2.play();
 
-        rotateTransition = new RotateTransition();
-        rotateTransition.setNode(root);
-        rotateTransition.setDuration(Duration.millis(3800));
-        rotateTransition.setByAngle(360);
-        rotateTransition.setCycleCount(200);
-        rotateTransition.setAutoReverse(false);
-        rotateTransition.play();
+        rotateTransition3 = new RotateTransition();
+        rotateTransition3.setNode(root);
+        rotateTransition3.setDuration(Duration.millis(3800));
+        rotateTransition3.setByAngle(360);
+        rotateTransition3.setCycleCount(Animation.INDEFINITE);
+        rotateTransition3.setAutoReverse(false);
+        rotateTransition3.play();
 
         Scale scale = new Scale();
         scale.setPivotX(150);
@@ -348,11 +352,24 @@ class CircleObstacle extends Obstacle{
             rotateTransition.play();
             System.out.println("SET Duration:"+time+" and"+this.rotateTransition.getDuration());
         }
-
     }
-
     public Duration getRotation(){
         return this.rotateTransition.getDuration();
+    }
+    public void SetRotation2(Duration time){
+        System.out.println("Duration updated:" + time);
+        if(time.compareTo(Duration.millis(500))>0){
+            rotateTransition2.stop();
+            rotateTransition3.stop();
+            this.rotateTransition2.setDuration(time);
+            this.rotateTransition3.setDuration(time);
+            rotateTransition2.play();
+            rotateTransition3.play();
+            System.out.println("SET Duration:"+time+" and"+this.rotateTransition2.getDuration());
+        }
+    }
+    public Duration getRotation2(){
+        return this.rotateTransition2.getDuration();
     }
 }
 class SquareObstacle extends Obstacle{
@@ -407,7 +424,7 @@ class SquareObstacle extends Obstacle{
         rotateTransition.setNode(root);
         rotateTransition.setDuration(Duration.millis(5000));
         rotateTransition.setByAngle(360);
-        rotateTransition.setCycleCount(500);
+        rotateTransition.setCycleCount(Animation.INDEFINITE);
         rotateTransition.setAutoReverse(false);
         rotateTransition.play();
 
@@ -467,15 +484,15 @@ class PlusObstacle extends Obstacle{
         rotateTransition.setNode(root);
         rotateTransition.setDuration(Duration.millis(8500));
         rotateTransition.setByAngle(360);
-        rotateTransition.setCycleCount(500);
+        rotateTransition.setCycleCount(Animation.INDEFINITE);
         rotateTransition.setAutoReverse(false);
         rotateTransition.play();
 
         Scale scale = new Scale();
         scale.setPivotX(195);
         scale.setPivotY(270);
-        scale.setX(1.1);
-        scale.setY(1.1);
+        scale.setX(1.3);
+        scale.setY(1.3);
         root.getTransforms().addAll(scale);
 
         return root;
