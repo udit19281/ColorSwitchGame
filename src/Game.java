@@ -32,6 +32,7 @@ import java.util.Objects;
 import java.util.Random;
 
 public class Game extends Application implements Serializable {
+    transient private Player player;
     private static final long serialVersionUID = 40L;
     //transient private static String FileName;
     transient private static long oldtime;
@@ -43,18 +44,22 @@ public class Game extends Application implements Serializable {
     transient private PlusObstacle Plus;
     transient private SquareObstacle Square;
     transient private Star Star;
-    transient private Colorswitcher colorswitcher;
+    transient private ColorSwitcher colorswitcher;
     private int bestScore;
     private double SaveArray[];
+    public int getBestScore(){
+        return this.bestScore;
+    }
 
     public Game(){
+        player= new Player(this);
         Circle=new CircleObstacle();
         Line=new LineObstacle();
         Plus=new PlusObstacle();
         IsClicked=false;
         Square=new SquareObstacle();
         Star=new Star();
-        colorswitcher= new Colorswitcher();
+        colorswitcher= new ColorSwitcher();
         bestScore=0;
         SaveArray=new double[5];
     }
@@ -65,8 +70,8 @@ public class Game extends Application implements Serializable {
         media = new Media(source);
         MediaPlayer mediaPlayer = new MediaPlayer(media);
         mediaPlayer.setCycleCount(200);
-        mediaPlayer.setAutoPlay(true);
-        mediaPlayer.play();
+        // mediaPlayer.setAutoPlay(true);
+        //   mediaPlayer.play();
 
         MainMenuGUI(stage);
     }
@@ -75,12 +80,11 @@ public class Game extends Application implements Serializable {
         stage.setHeight(695);
         stage.setWidth(600);
         stage.setResizable(false);
-
         Pane parent = new Pane();
         ImageView img=new ImageView();
-        img.setImage(new Image("mainbg.jpg"));
+        img.setImage(new Image("Images/mainbg.jpg"));
         ImageView img3=new ImageView();
-        img3.setImage(new Image("ring.png"));
+        img3.setImage(new Image("Images/ring.png"));
         img3.setFitHeight(150);
         img3.setFitWidth(150);
         img3.setLayoutX(20);
@@ -88,7 +92,7 @@ public class Game extends Application implements Serializable {
         parent.getChildren().add(img3);
 
         ImageView img4=new ImageView();
-        img4.setImage(new Image("ring.png"));
+        img4.setImage(new Image("Images/ring.png"));
         img4.setFitHeight(150);
         img4.setFitWidth(150);
         img4.setLayoutX(420);
@@ -111,7 +115,7 @@ public class Game extends Application implements Serializable {
         rotateTransition.setCycleCount(200);
         rotateTransition.setAutoReverse(false);
         rotateTransition.play();
-        BackgroundImage myBI= new BackgroundImage(new Image("mainbg.jpg",600,660,false,true),
+        BackgroundImage myBI= new BackgroundImage(new Image("Images/mainbg.jpg",600,660,false,true),
                 BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
                 BackgroundSize.DEFAULT);
         parent.setBackground(new Background(myBI));
@@ -167,9 +171,9 @@ public class Game extends Application implements Serializable {
 
         Pane parent = new Pane();
         ImageView img=new ImageView();
-        img.setImage(new Image("mainbg.jpg"));
+        img.setImage(new Image("Images/mainbg.jpg"));
         ImageView img3=new ImageView();
-        img3.setImage(new Image("ring.png"));
+        img3.setImage(new Image("Images/ring.png"));
         img3.setFitHeight(150);
         img3.setFitWidth(150);
         img3.setLayoutX(20);
@@ -177,7 +181,7 @@ public class Game extends Application implements Serializable {
         parent.getChildren().add(img3);
 
         ImageView img4=new ImageView();
-        img4.setImage(new Image("ring.png"));
+        img4.setImage(new Image("Images/ring.png"));
         img4.setFitHeight(150);
         img4.setFitWidth(150);
         img4.setLayoutX(420);
@@ -200,7 +204,7 @@ public class Game extends Application implements Serializable {
         rotateTransition.setCycleCount(200);
         rotateTransition.setAutoReverse(false);
         rotateTransition.play();
-        BackgroundImage myBI= new BackgroundImage(new Image("mainbg.jpg",600,660,false,true),
+        BackgroundImage myBI= new BackgroundImage(new Image("Images/mainbg.jpg",600,660,false,true),
                 BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
                 BackgroundSize.DEFAULT);
         parent.setBackground(new Background(myBI));
@@ -224,7 +228,6 @@ public class Game extends Application implements Serializable {
                 //show game saved Succefully
             }
             catch (Exception ignored){
-
                 System.out.println("ERROR IN SERIALIZE:221");
             }
         });
@@ -239,8 +242,20 @@ public class Game extends Application implements Serializable {
                 "-fx-border-radius: 60px;" +"-fx-background-color: #000000;"+ "-fx-text-fill: cyan;" + "-fx-font-family: serif;" +
                         "-fx-font-size: 20px;" + "-fx-font-weight: 200;" + "-fx-padding: 20px;" + "-fx-border-width:0.22em;"+ "-fx-border-color: cyan;");
         btn2.setOnAction(e->{
-            System.out.println("Pressed button 2 in pause menu");
-            GamePlay(stage,scene,true);
+
+            try{
+                serializeResume();
+
+                this.SaveArray=deserializeResume();
+                System.out.println("DONE Resuming");
+                GamePlay(stage,scene,true);
+                //show game saved Succefully
+            }
+            catch (Exception i){
+                System.out.println(i);
+                System.out.println("ERROR at line 256");
+            }
+//            GamePlay(stage,scene,true);
         });
         parent.getChildren().addAll(btn1,btn2);
         stage.setScene(scene);
@@ -254,9 +269,9 @@ public class Game extends Application implements Serializable {
 
         Pane parent = new Pane();
         ImageView img=new ImageView();
-        img.setImage(new Image("mainbg.jpg"));
+        img.setImage(new Image("Images/mainbg.jpg"));
         ImageView img3=new ImageView();
-        img3.setImage(new Image("ring.png"));
+        img3.setImage(new Image("Images/ring.png"));
         img3.setFitHeight(150);
         img3.setFitWidth(150);
         img3.setLayoutX(20);
@@ -264,7 +279,7 @@ public class Game extends Application implements Serializable {
         parent.getChildren().add(img3);
 
         ImageView img4=new ImageView();
-        img4.setImage(new Image("ring.png"));
+        img4.setImage(new Image("Images/ring.png"));
         img4.setFitHeight(150);
         img4.setFitWidth(150);
         img4.setLayoutX(420);
@@ -287,7 +302,7 @@ public class Game extends Application implements Serializable {
         rotateTransition.setCycleCount(200);
         rotateTransition.setAutoReverse(false);
         rotateTransition.play();
-        BackgroundImage myBI= new BackgroundImage(new Image("mainbg.jpg",600,660,false,true),
+        BackgroundImage myBI= new BackgroundImage(new Image("Images/mainbg.jpg",600,660,false,true),
                 BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
                 BackgroundSize.DEFAULT);
         parent.setBackground(new Background(myBI));
@@ -295,16 +310,31 @@ public class Game extends Application implements Serializable {
         Text text = new Text();
         text.setText("SELECT GAME");
         text.setX(200);
-        text.setY(200);
+        text.setY(180);
         text.setFont(Font.font("serif", FontWeight.BOLD, FontPosture.REGULAR, 25));
-        text.setFill(Color.YELLOW);
-
+        text.setFill(Color.valueOf("#00FFCD"));
         VBox Contents=new VBox();
         ArrayList<String> SavedGameFileName=new ArrayList<String>();
         File folder = new File("SavedGames/");
         File[] listOfFiles = folder.listFiles();
         Button button;
         ArrayList<Button> buttonArrayList=new ArrayList<Button>();
+        Button btn1 = new Button("Delete All");
+        btn1.setLayoutX(220);
+        btn1.setLayoutY(200);
+       // btn1.setMinSize(150, 25);
+        btn1.setStyle(
+                "-fx-border-radius: 57px;" +"-fx-background-color: #000000;"+ "-fx-text-fill: #FF009B;" + "-fx-font-family: serif;" +
+                        "-fx-font-size: 20px;" + "-fx-font-weight: 200;" + "-fx-padding: 15px;" + "-fx-border-width:0.09em;"+ "-fx-border-color: #FF009B;");
+        btn1.setOnAction(e->{
+            System.out.println("Removed Saved Games");
+            // Save save=new Save();
+            File fold = new File("SavedGames/");
+            for(File file: Objects.requireNonNull(fold.listFiles()))
+                if (!file.isDirectory())
+                    file.delete();
+            MainMenuGUI(stage);
+        });
 
         for (int i = 0; i < Objects.requireNonNull(listOfFiles).length; i++) {
             if (listOfFiles[i].isFile()) {
@@ -312,8 +342,8 @@ public class Game extends Application implements Serializable {
                 button=new Button(listOfFiles[i].getName());
                 buttonArrayList.add(button);
                 button.setStyle(
-                        "-fx-border-radius: 57px;" +"-fx-background-color: #000000;"+ "-fx-text-fill: #00FFCD;" + "-fx-font-family: serif;" +
-                                "-fx-font-size: 20px;" + "-fx-font-weight: 200;" + "-fx-padding: 20px;" + "-fx-border-width:0.07em;"+ "-fx-border-color: #00FFCD;");
+                        "-fx-border-radius: 57px;" +"-fx-background-color: #000000;"+ "-fx-text-fill: cyan;" + "-fx-font-family: serif;" +
+                                "-fx-font-size: 20px;" + "-fx-font-weight: 200;" + "-fx-padding: 10px;" + "-fx-border-width:0.07em;"+ "-fx-border-color: cyan;");
                 String FileName=SavedGameFileName.get(i);
                 button.setOnAction(actionEvent -> {
                     try{
@@ -329,30 +359,11 @@ public class Game extends Application implements Serializable {
                 Contents.getChildren().add(button);
             }
         }
-
-        Button btn1 = new Button("Delete All");
-        btn1.setMinSize(150, 25);
-        //   btn1.setLayoutX(250);
-
-//        btn1.setStyle("-fx-font-size: 1.5em; ");
-        btn1.setStyle(
-                "-fx-border-radius: 57px;" +"-fx-background-color: #000000;"+ "-fx-text-fill: pink;" + "-fx-font-family: serif;" +
-                        "-fx-font-size: 20px;" + "-fx-font-weight: 200;" + "-fx-padding: 20px;" + "-fx-border-width:0.09em;"+ "-fx-border-color: pink;");
-        btn1.setOnAction(e->{
-            System.out.println("Removed Saved Games");
-            // Save save=new Save();
-            File fold = new File("SavedGames/");
-            for(File file: Objects.requireNonNull(fold.listFiles()))
-                if (!file.isDirectory())
-                    file.delete();
-            MainMenuGUI(stage);
-        });
-        Contents.getChildren().add(btn1);
-        Contents.setSpacing(20);
+        Contents.setSpacing(5);
         Contents.setLayoutX(180);
-        Contents.setLayoutY(250);
+        Contents.setLayoutY(265);
 
-        parent.getChildren().addAll(text,Contents);
+        parent.getChildren().addAll(text,btn1,Contents);
         stage.setScene(scene);
         stage.show();
     }
@@ -364,9 +375,9 @@ public class Game extends Application implements Serializable {
 
         Pane parent = new Pane();
         ImageView img=new ImageView();
-        img.setImage(new Image("mainbg.jpg"));
+        img.setImage(new Image("Images/mainbg.jpg"));
         ImageView img3=new ImageView();
-        img3.setImage(new Image("ring.png"));
+        img3.setImage(new Image("Images/ring.png"));
         img3.setFitHeight(150);
         img3.setFitWidth(150);
         img3.setLayoutX(20);
@@ -374,7 +385,7 @@ public class Game extends Application implements Serializable {
         parent.getChildren().add(img3);
 
         ImageView img4=new ImageView();
-        img4.setImage(new Image("ring.png"));
+        img4.setImage(new Image("Images/ring.png"));
         img4.setFitHeight(150);
         img4.setFitWidth(150);
         img4.setLayoutX(420);
@@ -397,7 +408,7 @@ public class Game extends Application implements Serializable {
         rotateTransition.setCycleCount(200);
         rotateTransition.setAutoReverse(false);
         rotateTransition.play();
-        BackgroundImage myBI= new BackgroundImage(new Image("mainbg.jpg",600,660,false,true),
+        BackgroundImage myBI= new BackgroundImage(new Image("Images/mainbg.jpg",600,660,false,true),
                 BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
                 BackgroundSize.DEFAULT);
         parent.setBackground(new Background(myBI));
@@ -412,8 +423,19 @@ public class Game extends Application implements Serializable {
                 "-fx-border-radius: 60px;" +"-fx-background-color: #000000;"+ "-fx-text-fill: yellow;" + "-fx-font-family: serif;" +
                         "-fx-font-size: 20px;" + "-fx-font-weight: 200;" + "-fx-padding: 20px;" + "-fx-border-width:0.22em;"+ "-fx-border-color: yellow;");
         btn1.setOnAction(e->{
-            GamePlay(stage,scene,true);
-            System.out.println("Pressed button 1 in exit menu");
+            try{
+                serializeResume();
+                this.SaveArray=deserializeResume();
+                System.out.println("DONE Resuming");
+                GamePlay(stage,scene,true);
+                //show game saved Succefully
+            }
+            catch (Exception i){
+                System.out.println(i);
+                System.out.println("ERROR at line 256");
+            }
+            //      GamePlay(stage,scene,true);
+
         });
 
         Button btn2 = new Button("Restart");
@@ -451,11 +473,11 @@ public class Game extends Application implements Serializable {
             score=(int)SaveArray[0];
             bestScore=(int)SaveArray[3];
         }
-        else{
+        else {
             score =0;
         }
 
-        Image imagescore = new Image("scorestars.png");
+        Image imagescore = new Image("Images/scorestars.png");
         ImageView scorestar = new ImageView(imagescore);
         scorestar.setFitHeight(40);
         scorestar.setFitWidth(80);
@@ -468,7 +490,7 @@ public class Game extends Application implements Serializable {
         text.setText(""+score);
         text.setFill(Color.WHITE);
 
-        Image imagepause = new Image("pause1.png");
+        Image imagepause = new Image("Images/pause1.png");
         ImageView pause = new ImageView(imagepause);
         pause.setFitHeight(60);
         pause.setFitWidth(60);
@@ -482,7 +504,7 @@ public class Game extends Application implements Serializable {
             PauseGameGUI(stage,scene,SaveArray);
         });
 
-        Image imageexit = new Image("exit2.png");
+        Image imageexit = new Image("Images/exit2.png");
         ImageView exit = new ImageView(imageexit);
         exit.setFitHeight(60);
         exit.setFitWidth(60);
@@ -496,19 +518,15 @@ public class Game extends Application implements Serializable {
             ExitGUI(stage,scene);
         });
 
-        javafx.scene.shape.Circle ball=new Circle();
-        ball.setRadius(12);
-        ball.setLayoutX(300);
-        ball.setLayoutY(450);
-        ball.setFill(Color.YELLOW);
+        javafx.scene.shape.Circle ball= player.getBall().getBall();
 
-        Image image = new Image("text.png");
+        Image image = new Image("Images/text.png");
         ImageView imageView = new ImageView(image);
         imageView.setFitHeight(100);
         imageView.setFitWidth(600);
         imageView.setPreserveRatio(true);
 
-        Image image2 = new Image("hand2.png");
+        Image image2 = new Image("Images/hand2.png");
         ImageView imageView2 = new ImageView(image2);
         imageView2.setFitHeight(60);
         imageView2.setFitWidth(60);
@@ -581,6 +599,7 @@ public class Game extends Application implements Serializable {
             ball.setTranslateY(SaveArray[1]);
             bestScore=(int)SaveArray[3];
             pos_star= (int)SaveArray[4];
+            System.out.println("Updated pos_star: "+pos_star);
             IsClicked=false;
             gridPane.getChildren().remove(star);
             gridPane.add(star, 0, pos_star);
@@ -593,8 +612,7 @@ public class Game extends Application implements Serializable {
         EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent e) {
-
-
+                System.out.println(Circle.getRotation());
                 oldtime = System.currentTimeMillis();
                 if(ball.getTranslateY()>-100) {
                     TranslateTransition translateTransition = new TranslateTransition();
@@ -606,7 +624,7 @@ public class Game extends Application implements Serializable {
 
                 }
                 else
-                    Moveball(gridPane);
+                    player.Moveball(gridPane);
             }
         };
         btn3.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
@@ -640,6 +658,10 @@ public class Game extends Application implements Serializable {
                     }
                 }
                 if(gridPane.getTranslateY()>=1920){
+                    Duration dur=Circle.getRotation();
+                    System.out.println("Duratttttttt"+dur);
+                    Circle.SetRotation(dur.subtract(Duration.millis(1000)));
+
                     gridPane.setTranslateY(4);
                     gridPane.getChildren().remove(star);
                     pos_star=5;
@@ -673,10 +695,16 @@ public class Game extends Application implements Serializable {
                     SaveArray[2] = gridPane.getTranslateY();
                     SaveArray[3] = bestScore;
                     SaveArray[4]= GridPane.getRowIndex(star);
+                    System.out.println("Star Pos:"+SaveArray[4]);
                     stop();
                     //MainMenuGUI(stage);
                     PauseGameGUI(stage, scene, SaveArray);
                 } else if (btn2.isPressed()) {
+                    SaveArray[0] = score;
+                    SaveArray[1] = ball.getTranslateY();
+                    SaveArray[2] = gridPane.getTranslateY();
+                    SaveArray[3] = bestScore;
+                    SaveArray[4]= GridPane.getRowIndex(star);
                     System.out.println("EXIT");
                     stop();
                 }
@@ -769,13 +797,13 @@ public class Game extends Application implements Serializable {
         java.awt.Color awtColor = new java.awt.Color((float) fx.getRed(),(float) fx.getGreen(), (float) fx.getBlue(), (float) fx.getOpacity());
         return awtColor;
     }
-    public void Moveball(GridPane gridPane) {
-        TranslateTransition translateTransition = new TranslateTransition();
-        translateTransition.setDuration(Duration.millis(150));
-        translateTransition.setNode(gridPane);
-        translateTransition.setByY(35);
-        translateTransition.play();
-    }
+//    public void Moveball(GridPane gridPane) {
+//        TranslateTransition translateTransition = new TranslateTransition();
+//        translateTransition.setDuration(Duration.millis(150));
+//        translateTransition.setNode(gridPane);
+//        translateTransition.setByY(35);
+//        translateTransition.play();
+//    }
     public double[] deserialize(String fileName) throws IOException,ClassNotFoundException {
 
         ObjectInputStream in = null;
@@ -789,6 +817,31 @@ public class Game extends Application implements Serializable {
         }
         return retrieve.SaveArray;
     }
+    public double[] deserializeResume() throws IOException,ClassNotFoundException {
+
+        ObjectInputStream in = null;
+        Game retrieve=null;
+        try {
+            in = new ObjectInputStream (new FileInputStream("Music/temp.txt"));
+            retrieve= (Game) in.readObject();
+        } finally {
+            assert in != null;
+            in.close();
+        }
+        return retrieve.SaveArray;
+    }
+    public void serializeResume() throws IOException {
+        String file = ("Music/temp.txt") ;
+        ObjectOutputStream out = null;
+        try {
+            out = new ObjectOutputStream (new FileOutputStream(file));
+            out.writeObject(this);
+        } finally {
+            assert out != null;
+            out.close();
+        }
+    }
+
     public void serialize() throws IOException {
         Date date = new Date() ;
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy, HH-mm-ss") ;
@@ -809,7 +862,7 @@ public class Game extends Application implements Serializable {
         stage.setResizable(false);
         Pane parent=new Pane();
         ImageView img4=new ImageView();
-        img4.setImage(new Image("ring.png"));
+        img4.setImage(new Image("Images/ring.png"));
         img4.setFitHeight(150);
         img4.setFitWidth(150);
         img4.setLayoutX(420);
@@ -817,9 +870,9 @@ public class Game extends Application implements Serializable {
 
         parent.getChildren().add(img4);
         ImageView img=new ImageView();
-        img.setImage(new Image("mainbg.jpg"));
+        img.setImage(new Image("Images/mainbg.jpg"));
         ImageView img3=new ImageView();
-        img3.setImage(new Image("ring.png"));
+        img3.setImage(new Image("Images/ring.png"));
         img3.setFitHeight(150);
         img3.setFitWidth(150);
         img3.setLayoutX(20);
@@ -845,21 +898,21 @@ public class Game extends Application implements Serializable {
         if(score>=bestScore){
             bestScore=score;
         }
-        BackgroundImage myBI= new BackgroundImage(new Image("mainbg.jpg",600,660,false,true),
+        BackgroundImage myBI= new BackgroundImage(new Image("Images/mainbg.jpg",600,660,false,true),
                 BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
                 BackgroundSize.DEFAULT);
         Text text = new Text();
         text.setText("SCORE: "+score);
-        text.setFont(Font.font("serif", FontWeight.BOLD, FontPosture.REGULAR, 30));
-        text.setFill(Color.CYAN);
-        text.setX(170);
-        text.setY(280);
+        text.setFont(Font.font("serif", FontWeight.BOLD, FontPosture.REGULAR, 35));
+        text.setFill(Color.valueOf("#FF008F"));
+        text.setX(220);
+        text.setY(220);
         Text text2 = new Text();
         text2.setText("BEST SCORE: "+bestScore);
-        text2.setFont(Font.font("serif", FontWeight.BOLD, FontPosture.REGULAR, 25));
-        text2.setFill(Color.YELLOW);
-        text2.setX(170);
-        text2.setY(350);
+        text2.setFont(Font.font("serif", FontWeight.BOLD, FontPosture.REGULAR, 30));
+        text2.setFill(Color.valueOf("#FF008F"));
+        text2.setX(190);
+        text2.setY(280);
         parent.getChildren().addAll(text,text2);
         Button btn4=null;
         if(bestScore>=5){
@@ -867,21 +920,21 @@ public class Game extends Application implements Serializable {
             btn4 = new Button("Continue Game");
             btn4.setMinSize(150, 25);
             btn4.setLayoutX(200);
-            btn4.setLayoutY(400);
+            btn4.setLayoutY(300);
             btn4.setFont(Font.font("serif", FontWeight.BOLD, FontPosture.REGULAR, 20));
             btn4.setStyle(
-                    "-fx-border-radius: 57px;" +"-fx-background-color: #000000;"+ "-fx-text-fill: FF0AF2;" + "-fx-font-family: serif;" +
-                            "-fx-font-size: 20px;" + "-fx-font-weight: 200;" + "-fx-padding: 20px;" + "-fx-border-width:0.22em;"+ "-fx-border-color: #ED33E3;");
+                    "-fx-border-radius: 57px;" +"-fx-background-color: #000000;"+ "-fx-text-fill: #00FFCF;" + "-fx-font-family: serif;" +
+                            "-fx-font-size: 20px;" + "-fx-font-weight: 200;" + "-fx-padding: 18px;" + "-fx-border-width:0.22em;"+ "-fx-border-color: #00FFCF;");
         }
         Button btn3 = new Button("Exit to Main Menu");
         btn3.setMinSize(150, 25);
         btn3.setLayoutX(200);
-        btn3.setLayoutY(500);
+        btn3.setLayoutY(380);
         btn3.setFont(Font.font("serif", FontWeight.BOLD, FontPosture.REGULAR, 30));
 //        btn3.setStyle("-fx-font-size: 1.5em; ");
         btn3.setStyle(
-                "-fx-border-radius: 57px;" +"-fx-background-color: #000000;"+ "-fx-text-fill: cyan;" + "-fx-font-family: serif;" +
-                        "-fx-font-size: 20px;" + "-fx-font-weight: 200;" + "-fx-padding: 20px;" + "-fx-border-width:0.22em;"+ "-fx-border-color: cyan;");
+                "-fx-border-radius: 57px;" +"-fx-background-color: #000000;"+ "-fx-text-fill: #00FFCF;" + "-fx-font-family: serif;" +
+                        "-fx-font-size: 20px;" + "-fx-font-weight: 200;" + "-fx-padding: 20px;" + "-fx-border-width:0.22em;"+ "-fx-border-color: #00FFCF;");
         btn3.setOnAction(e->{
             System.out.println("Pressed button 3 in exit menu");
             stage.close();
@@ -890,7 +943,18 @@ public class Game extends Application implements Serializable {
         if(btn4!=null){
             btn4.setOnAction(e->{
                 SaveArray[0]=score-5;
-                GamePlay(stage,scene,true);
+                try{
+                    serializeResume();
+                    this.SaveArray=deserializeResume();
+                    System.out.println("DONE Resuming");
+                    GamePlay(stage,scene,true);
+                    //show game saved Succefully
+                }
+                catch (Exception i){
+                    System.out.println(i);
+                    System.out.println("ERROR at line 959");
+                }
+
             });
             parent.getChildren().add(btn4);
         }

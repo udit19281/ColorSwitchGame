@@ -20,23 +20,37 @@ public abstract class GameElements {
     public abstract Group getObstacle();
 }
 class Ball extends GameElements{
-private int color;
-
-    public int getColor() {
+    private Color color;
+    private javafx.scene.shape.Circle ball;
+    public Ball()
+    {
+        ball=new Circle();
+        ball.setRadius(12);
+        ball.setLayoutX(300);
+        ball.setLayoutY(450);
+        color = Color.YELLOW;
+        ball.setFill(color);
+    }
+    public Color getColor() {
         return this.color;
     }
-    public void changeColor(int c){
+    public void changeColor(Color c){
         this.color=c;
+        ball.setFill(color);
+    }
+    public Circle getBall() {
+        return ball;
     }
     @Override
     public Group getObstacle() {
-        return null;
+        Group root = new Group(ball);
+        return root;
     }
 }
 class Star extends GameElements{
     @Override
     public Group getObstacle() {
-        Image image = new Image("star.png");
+        Image image = new Image("Images/star.png");
         ImageView imageView = new ImageView(image);
         imageView.setFitHeight(40);
         imageView.setFitWidth(40);
@@ -57,10 +71,10 @@ class Star extends GameElements{
 
 }
 
-class Colorswitcher extends GameElements{
+class ColorSwitcher extends GameElements{
     @Override
     public Group getObstacle() {
-        Image image = new Image("colorswitcher.png");
+        Image image = new Image("Images/colorswitcher.png");
         ImageView imageView = new ImageView(image);
         imageView.setFitHeight(40);
         imageView.setFitWidth(40);
@@ -116,11 +130,12 @@ class LineObstacle extends Obstacle{
         translate.setAutoReverse(true);
         translate.setNode(root);
         translate.play();
+
         return root;
     }
 }
 class CircleObstacle extends Obstacle{
-
+    private RotateTransition rotateTransition=null;
     @Override
     public Group getObstacle() {
         Arc arc1=new Arc();
@@ -177,7 +192,7 @@ class CircleObstacle extends Obstacle{
         Group root=new Group(clip1,clip2,clip3,clip4);
 
 //        Scene scene=new Scene(root,600,600);
-        RotateTransition rotateTransition = new RotateTransition();
+        rotateTransition = new RotateTransition();
         rotateTransition.setNode(root);
         rotateTransition.setDuration(Duration.millis(3000));
         rotateTransition.setByAngle(360);
@@ -307,7 +322,7 @@ class CircleObstacle extends Obstacle{
         rotateTransition2.setAutoReverse(false);
         rotateTransition2.play();
 
-        RotateTransition rotateTransition = new RotateTransition();
+        rotateTransition = new RotateTransition();
         rotateTransition.setNode(root);
         rotateTransition.setDuration(Duration.millis(3800));
         rotateTransition.setByAngle(360);
@@ -325,9 +340,37 @@ class CircleObstacle extends Obstacle{
         Group root3=new Group(root,root2);
         return root3;
     }
+    public void SetRotation(Duration time){
+        System.out.println("Duration updated:" + time);
+        if(time.compareTo(Duration.millis(500))>0){
+            rotateTransition.stop();
+            this.rotateTransition.setDuration(time);
+            rotateTransition.play();
+            System.out.println("SET Duration:"+time+" and"+this.rotateTransition.getDuration());
+        }
+
+    }
+
+    public Duration getRotation(){
+        return this.rotateTransition.getDuration();
+    }
 }
 class SquareObstacle extends Obstacle{
 
+    private RotateTransition rotateTransition;
+    public void SetRotation(Duration time){
+        System.out.println("Duration updated:" + time);
+        if(time.compareTo(Duration.millis(500))>0){
+            rotateTransition.stop();
+            this.rotateTransition.setDuration(time);
+            rotateTransition.play();
+            System.out.println("SET Duration:"+time+" and"+this.rotateTransition.getDuration());
+        }
+    }
+
+    public Duration getRotation(){
+        return this.rotateTransition.getDuration();
+    }
     @Override
     public Group getObstacle() {
         Rectangle rectangle = new Rectangle();
@@ -359,9 +402,8 @@ class SquareObstacle extends Obstacle{
         rectangle4.setHeight(15.0f);
         rectangle4.setFill(Color.BLUE);
 
-
         Group root = new Group(rectangle,rectangle2,rectangle3,rectangle4);
-        RotateTransition rotateTransition = new RotateTransition();
+        rotateTransition = new RotateTransition();
         rotateTransition.setNode(root);
         rotateTransition.setDuration(Duration.millis(5000));
         rotateTransition.setByAngle(360);
@@ -372,22 +414,22 @@ class SquareObstacle extends Obstacle{
         return root;
     }
 }
-class TriangleObstacle extends Obstacle{
-    private int sideLength;
-    public void setSideLength(int s) {
-        this.sideLength=s;
-    }
 
-    public int getSideLength() {
-        return sideLength;
-    }
-    @Override
-    public Group getObstacle() {
-        return null;
-    }
-}
 class PlusObstacle extends Obstacle{
+    private RotateTransition rotateTransition;
+    public void SetRotation(Duration time){
+        System.out.println("Duration updated:" + time);
+        if(time.compareTo(Duration.millis(500))>0){
+            rotateTransition.stop();
+            this.rotateTransition.setDuration(time);
+            rotateTransition.play();
+            System.out.println("SET Duration:"+time+" and"+this.rotateTransition.getDuration());
+        }
+    }
 
+    public Duration getRotation(){
+        return this.rotateTransition.getDuration();
+    }
     @Override
     public Group getObstacle() {
         Rectangle rectangle = new Rectangle();
@@ -421,7 +463,7 @@ class PlusObstacle extends Obstacle{
 
 
         Group root = new Group(rectangle,rectangle2,rectangle3,rectangle4);
-        RotateTransition rotateTransition = new RotateTransition();
+        rotateTransition = new RotateTransition();
         rotateTransition.setNode(root);
         rotateTransition.setDuration(Duration.millis(8500));
         rotateTransition.setByAngle(360);
