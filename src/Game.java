@@ -118,11 +118,12 @@ public class Game extends Application implements Serializable {
         Scene scene = new Scene(parent);
         Button btn1 = new Button("New Game");
     //    btn1.setMinSize(150, 25);
-        btn1.setLayoutX(250);
-        btn1.setLayoutY(200);
+        btn1.setLayoutX(200);
+        btn1.setLayoutY(210);
+        btn1.setPrefWidth(200);
         btn1.setStyle(
                 "-fx-border-radius: 57px;" +"-fx-background-color: #000000;"+ "-fx-text-fill: FF0AF2;" + "-fx-font-family: serif;" +
-                        "-fx-font-size: 20px;" + "-fx-font-weight: 200;" + "-fx-padding: 25px;" + "-fx-border-width:0.22em;"+ "-fx-border-color: #ED33E3;");
+                        "-fx-font-size: 20px;" + "-fx-font-weight: 200;" + "-fx-padding: 20px;" + "-fx-border-width:0.22em;"+ "-fx-border-color: #ED33E3;");
         btn1.setOnAction(e->{
             System.out.println("Pressed button 1 in main menu");
             GamePlay(stage,scene,false);
@@ -130,23 +131,25 @@ public class Game extends Application implements Serializable {
 
         Button btn2 = new Button("Resume");
        // btn2.setMinSize(150, 25);
-        btn2.setLayoutX(265);
-        btn2.setLayoutY(300);
+        btn2.setLayoutX(200);
+        btn2.setLayoutY(310);
+        btn2.setPrefWidth(200);
         btn2.setStyle(
-                "-fx-border-radius: 57px;" +"-fx-background-color: #000000;"+ "-fx-text-fill: #FFFA6C;" + "-fx-font-family: serif;" +
-                        "-fx-font-size: 20px;" + "-fx-font-weight: 200;" + "-fx-padding: 25px;" + "-fx-border-width:0.22em;"+ "-fx-border-color: #FFF700;");
+                "-fx-border-radius: 57px;" +"-fx-background-color: #000000;"+ "-fx-text-fill: cyan;" + "-fx-font-family: serif;" +
+                        "-fx-font-size: 20px;" + "-fx-font-weight: 200;" + "-fx-padding: 20px;" + "-fx-border-width:0.22em;"+ "-fx-border-color: cyan;");
         btn2.setOnAction(e->{
             System.out.println("Pressed button 2 in main menu");
             SavedGames(stage,scene);
         });
 
         Button btn3 = new Button("Exit");
-        btn3.setLayoutX(280);
-        btn3.setLayoutY(395);
+        btn3.setLayoutX(200);
+        btn3.setLayoutY(410);
+        btn3.setPrefWidth(200);
        // btn3.setMinSize(150, 25);
         btn3.setStyle(
-                "-fx-border-radius: 60px;" +"-fx-background-color: #000000;"+ "-fx-text-fill: #BBFAB1;" + "-fx-font-family: serif;" +
-                        "-fx-font-size: 20px;" + "-fx-font-weight: 200;" + "-fx-padding: 25px;" + "-fx-border-width:0.22em;"+ "-fx-border-color: #18FF00;");
+                "-fx-border-radius: 60px;" +"-fx-background-color: #000000;"+ "-fx-text-fill: yellow;" + "-fx-font-family: serif;" +
+                        "-fx-font-size: 20px;" + "-fx-font-weight: 200;" + "-fx-padding: 20px;" + "-fx-border-width:0.22em;"+ "-fx-border-color: yellow;");
         btn3.setOnAction(e->{
             System.out.println("Pressed button 3 in main menu");
             Platform.exit();
@@ -205,13 +208,12 @@ public class Game extends Application implements Serializable {
 
         Button btn1 = new Button("Save");
         btn1.setMinSize(150, 25);
-        btn1.setStyle("-fx-font-size: 2em;" +
-                "-fx-min-width: 80px; -fx-min-height: 80px;" +
-                " -fx-max-width: 138px; -fx-max-height: 138px;" +
-                "-fx-background-color: #000000;" +
-                "-fx-text-fill:#ffffff;");
-        btn1.setLayoutX(250);
-        btn1.setLayoutY(200);
+        btn1.setPrefWidth(200);
+        btn1.setStyle(
+                "-fx-border-radius: 57px;" +"-fx-background-color: #000000;"+ "-fx-text-fill: FF0AF2;" + "-fx-font-family: serif;" +
+                        "-fx-font-size: 20px;" + "-fx-font-weight: 200;" + "-fx-padding: 20px;" + "-fx-border-width:0.22em;"+ "-fx-border-color: #ED33E3;");
+        btn1.setLayoutX(190);
+        btn1.setLayoutY(230);
 //        btn1.setStyle("-fx-font-size: 1.5em; ");
         btn1.setOnAction(e->{
             System.out.println("Save Game");
@@ -229,14 +231,13 @@ public class Game extends Application implements Serializable {
 
         Button btn2 = new Button(" Resume");
         btn2.setMinSize(150, 25);
-        btn2.setLayoutX(250);
-        btn2.setLayoutY(250);
+        btn2.setLayoutX(190);
+        btn2.setLayoutY(330);
+        btn2.setPrefWidth(200);
 //        btn2.setStyle("-fx-font-size: 1.5em; ");
-        btn2.setStyle("-fx-font-size: 2em;" +
-                "-fx-min-width: 80px; -fx-min-height: 80px;" +
-                " -fx-max-width: 138px; -fx-max-height: 138px;" +
-                "-fx-background-color: #000000;" +
-                "-fx-text-fill:#ffffff;");
+        btn2.setStyle(
+                "-fx-border-radius: 60px;" +"-fx-background-color: #000000;"+ "-fx-text-fill: cyan;" + "-fx-font-family: serif;" +
+                        "-fx-font-size: 20px;" + "-fx-font-weight: 200;" + "-fx-padding: 20px;" + "-fx-border-width:0.22em;"+ "-fx-border-color: cyan;");
         btn2.setOnAction(e->{
             System.out.println("Pressed button 2 in pause menu");
             GamePlay(stage,scene,true);
@@ -404,14 +405,12 @@ public class Game extends Application implements Serializable {
 
         Button btn1 = new Button("Continue");
         btn1.setMinSize(150, 25);
-        btn1.setLayoutX(250);
-        btn1.setLayoutY(200);
-//        btn1.setStyle("-fx-font-size: 1.5em; ");
-        btn1.setStyle("-fx-font-size: 2em;" +
-                "-fx-min-width: 80px; -fx-min-height: 80px;" +
-                " -fx-max-width: 138px; -fx-max-height: 138px;" +
-                "-fx-background-color: #000000;" +
-                "-fx-text-fill:#ffffff;");
+        btn1.setLayoutX(190);
+        btn1.setLayoutY(210);
+        btn1.setPrefWidth(200);
+        btn1.setStyle(
+                "-fx-border-radius: 60px;" +"-fx-background-color: #000000;"+ "-fx-text-fill: yellow;" + "-fx-font-family: serif;" +
+                        "-fx-font-size: 20px;" + "-fx-font-weight: 200;" + "-fx-padding: 20px;" + "-fx-border-width:0.22em;"+ "-fx-border-color: yellow;");
         btn1.setOnAction(e->{
             GamePlay(stage,scene,true);
             System.out.println("Pressed button 1 in exit menu");
@@ -419,14 +418,12 @@ public class Game extends Application implements Serializable {
 
         Button btn2 = new Button("Restart");
         btn2.setMinSize(150, 25);
-        btn2.setLayoutX(250);
-        btn2.setLayoutY(250);
-//        btn2.setStyle("-fx-font-size: 1.5em; ");
-        btn2.setStyle("-fx-font-size: 2em;" +
-                "-fx-min-width: 80px; -fx-min-height: 80px;" +
-                " -fx-max-width: 138px; -fx-max-height: 138px;" +
-                "-fx-background-color: #000000;" +
-                "-fx-text-fill:#ffffff;");
+        btn2.setLayoutX(190);
+        btn2.setLayoutY(310);
+        btn2.setPrefWidth(200);
+        btn2.setStyle(
+                "-fx-border-radius: 60px;" +"-fx-background-color: #000000;"+ "-fx-text-fill: cyan;" + "-fx-font-family: serif;" +
+                        "-fx-font-size: 20px;" + "-fx-font-weight: 200;" + "-fx-padding: 20px;" + "-fx-border-width:0.22em;"+ "-fx-border-color: cyan;");
         btn2.setOnAction(e->{
             GamePlay(stage,scene,false);
             System.out.println("Pressed button 2 in exit menu");
@@ -434,14 +431,12 @@ public class Game extends Application implements Serializable {
 
         Button btn3 = new Button("Main Menu");
         btn3.setMinSize(150, 25);
-        btn3.setLayoutX(250);
-        btn3.setLayoutY(300);
-//        btn3.setStyle("-fx-font-size: 1.5em; ");
-        btn3.setStyle("-fx-font-size: 2em;" +
-                "-fx-min-width: 80px; -fx-min-height: 80px;" +
-                " -fx-max-width: 138px; -fx-max-height: 138px;" +
-                "-fx-background-color: #000000;" +
-                "-fx-text-fill:#ffffff;");
+        btn3.setLayoutX(190);
+        btn3.setLayoutY(410);
+        btn3.setPrefWidth(200);
+        btn3.setStyle(
+                "-fx-border-radius: 57px;" +"-fx-background-color: #000000;"+ "-fx-text-fill: FF0AF2;" + "-fx-font-family: serif;" +
+                        "-fx-font-size: 20px;" + "-fx-font-weight: 200;" + "-fx-padding: 20px;" + "-fx-border-width:0.22em;"+ "-fx-border-color: #ED33E3;");
         btn3.setOnAction(e->{
             System.out.println("Pressed button 3 in exit menu");
             stage.close();
@@ -460,29 +455,43 @@ public class Game extends Application implements Serializable {
             score =0;
         }
 
+        Image imagescore = new Image("scorestars.png");
+        ImageView scorestar = new ImageView(imagescore);
+        scorestar.setFitHeight(40);
+        scorestar.setFitWidth(80);
+        scorestar.setLayoutX(500);
+        scorestar.setLayoutY(10);
         Text text = new Text();
-        text.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 20));
-        text.setX(470);
-        text.setY(25);
-        text.setText("SCORE:"+score);
+        text.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 50));
+        text.setX(520);
+        text.setY(100);
+        text.setText(""+score);
         text.setFill(Color.WHITE);
-        Button btn1 = new Button("Pause");
-        btn1.setMinSize(100, 25);
-//        btn1.setStyle("-fx-font-size: 1.5em; ");
-        btn1.setStyle("-fx-font-size: 2em;" +
-                "-fx-background-color: #000000;" +
-                "-fx-text-fill:#ffffff;");
+
+        Image imagepause = new Image("pause1.png");
+        ImageView pause = new ImageView(imagepause);
+        pause.setFitHeight(60);
+        pause.setFitWidth(60);
+        pause.setPreserveRatio(true);
+        Button btn1 = new Button();
+        btn1.setPrefSize(60, 60);
+        btn1.setStyle("-fx-background-color: black; ");
+        btn1.setGraphic(pause);
         btn1.setOnAction(e->{
 
             System.out.println("Pause the game");
             PauseGameGUI(stage,scene,SaveArray);
         });
-        Button btn2 = new Button("Exit");
-        btn2.setMinSize(100, 25);
-//        btn2.setStyle("-fx-font-size: 1.5em; ");
-        btn2.setStyle("-fx-font-size: 2em;" +
-                "-fx-background-color: #000000;" +
-                "-fx-text-fill:#ffffff;");
+
+        Image imageexit = new Image("exit2.png");
+        ImageView exit = new ImageView(imageexit);
+        exit.setFitHeight(60);
+        exit.setFitWidth(60);
+        exit.setPreserveRatio(true);
+        Button btn2 = new Button();
+        btn2.setStyle("-fx-background-color: black; ");
+        btn2.setGraphic(exit);
+        btn2.setPrefSize(60, 60);
         btn2.setOnAction(e->{
             System.out.println("exit");
             ExitGUI(stage,scene);
@@ -490,20 +499,20 @@ public class Game extends Application implements Serializable {
 
         javafx.scene.shape.Circle ball=new Circle();
         ball.setRadius(12);
-        ball.setLayoutX(294);
+        ball.setLayoutX(300);
         ball.setLayoutY(450);
         ball.setFill(Color.YELLOW);
 
         Image image = new Image("text.png");
         ImageView imageView = new ImageView(image);
-        imageView.setFitHeight(50);
-        imageView.setFitWidth(200);
+        imageView.setFitHeight(100);
+        imageView.setFitWidth(600);
         imageView.setPreserveRatio(true);
 
         Image image2 = new Image("hand2.png");
         ImageView imageView2 = new ImageView(image2);
-        imageView2.setFitHeight(50);
-        imageView2.setFitWidth(50);
+        imageView2.setFitHeight(60);
+        imageView2.setFitWidth(60);
         imageView2.setPreserveRatio(true);
 
         BorderPane border=new BorderPane();
@@ -591,7 +600,7 @@ public class Game extends Application implements Serializable {
                 oldtime = System.currentTimeMillis();
                 if(ball.getTranslateY()>-100) {
                     TranslateTransition translateTransition = new TranslateTransition();
-                    translateTransition.setDuration(Duration.millis(100));
+                    translateTransition.setDuration(Duration.millis(150));
                     translateTransition.setNode(ball);
                     translateTransition.setByY(-35);
                     translateTransition.setCycleCount(1);
@@ -690,19 +699,21 @@ public class Game extends Application implements Serializable {
                     catch (Exception evt) {
                         // System.err.println(evt.getMessage());
                     }
-                    if( d.equals(colors[0]) || d.equals(colors[1]) || d.equals(colors[2]) || d2.equals(colors[0]) || d2.equals(colors[1]) || d2.equals(colors[2]))
+                    /*if( d.equals(colors[0]) || d.equals(colors[1]) || d.equals(colors[2]) || d2.equals(colors[0]) || d2.equals(colors[1]) || d2.equals(colors[2]))
                     {
                         //System.out.println(d);
                         System.out.println("end");
                          stop();
                         GameScoreGUI(stage,scene);
-                    }
+                    }*/
                     if(screenBounds.intersects(star.localToScreen(star.getBoundsInLocal())))
                     {
                         if(gridPane.getTranslateY()<1890){
                             gridPane.getChildren().remove(star);
                             score++;
-                            text.setText("SCORE:"+score);
+                            if(score>9)
+                                text.setX(500);
+                            text.setText(""+score);
                             pos_star= pos_star-1;
                             if(pos_star==2)
                                 pos_star=pos_star-1;
@@ -738,12 +749,14 @@ public class Game extends Application implements Serializable {
 
         VBox ver2=new VBox(btn3,imageView);
         ver2.setAlignment(Pos.BOTTOM_CENTER);
-        ver2.setSpacing(5);
-        ver2.setLayoutX(250);
+        ver2.setSpacing(3);
+        ver2.setLayoutX(230);
         ver2.setLayoutY(500);
+        ver.setLayoutX(5);
+        ver.setLayoutY(20);
         //border.setStyle("-fx-background-color: #000000;");
         stage.setTitle("Play Game");
-        Group mainroot = new Group(ver,gridPane,ball,ver2,text);
+        Group mainroot = new Group(ver,gridPane,ball,ver2,text,scorestar);
         scene.setRoot(mainroot);
         scene.setFill(Color.BLACK);
         stage.setScene(scene);
@@ -760,7 +773,7 @@ public class Game extends Application implements Serializable {
     }
     public void Moveball(GridPane gridPane) {
         TranslateTransition translateTransition = new TranslateTransition();
-        translateTransition.setDuration(Duration.millis(100));
+        translateTransition.setDuration(Duration.millis(150));
         translateTransition.setNode(gridPane);
         translateTransition.setByY(35);
         translateTransition.play();
