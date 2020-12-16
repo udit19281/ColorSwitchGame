@@ -1,6 +1,4 @@
-import javafx.animation.AnimationTimer;
-import javafx.animation.RotateTransition;
-import javafx.animation.TranslateTransition;
+import javafx.animation.*;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
@@ -337,6 +335,23 @@ public class Game extends Application implements Serializable {
             MainMenuGUI(stage);
         });
 
+        Image imageexit = new Image("Images/exit2.png");
+        ImageView exit = new ImageView(imageexit);
+        exit.setFitHeight(60);
+        exit.setFitWidth(60);
+        exit.setPreserveRatio(true);
+        Button btn2 = new Button();
+        btn2.setStyle("-fx-background-color: black; ");
+        btn2.setGraphic(exit);
+        btn2.setPrefSize(60, 60);
+        btn2.setOnAction(e->{
+            System.out.println("exit");
+            MainMenuGUI(stage);
+        });
+        btn2.setLayoutX(5);
+        btn2.setLayoutY(25);
+        parent.getChildren().add(btn2);
+
         for (int i = 0; i < Objects.requireNonNull(listOfFiles).length; i++) {
             if (listOfFiles[i].isFile()) {
                 SavedGameFileName.add(i,listOfFiles[i].getName());
@@ -634,6 +649,15 @@ public class Game extends Application implements Serializable {
         };
         btn3.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
 
+        VBox ver2=new VBox(btn3,imageView);
+        ver2.setAlignment(Pos.BOTTOM_CENTER);
+        ver2.setSpacing(3);
+        ver2.setLayoutX(230);
+        ver2.setLayoutY(500);
+        ver.setLayoutX(5);
+        ver.setLayoutY(20);
+        Group mainroot = new Group(ver,gridPane,ball,ver2,text,scorestar);
+
         new AnimationTimer() {
             @Override
             public void handle(long now) {
@@ -737,15 +761,40 @@ public class Game extends Application implements Serializable {
                     }
                     if( d.equals(colors[0]) || d.equals(colors[1]) || d.equals(colors[2]) || d2.equals(colors[0]) || d2.equals(colors[1]) || d2.equals(colors[2]))
                     {
-
-                       // stop();
-                       // GameScoreGUI(stage,scene);
+                        stop();
+                        GameScoreGUI(stage,scene);
                     }
                     if(screenBounds.intersects(star.localToScreen(star.getBoundsInLocal())))
                     {
                         if(gridPane.getTranslateY()<1890){
                             gridPane.getChildren().remove(star);
                             score++;
+                            if(score==bestScore+1)
+                            {
+                                String source = new File("Music/win.mp3").toURI().toString();
+                                Media media = null;
+                                media = new Media(source);
+                                MediaPlayer mediaPlayer = new MediaPlayer(media);
+                                mediaPlayer.setCycleCount(1);
+                                mediaPlayer.setAutoPlay(true);
+                                mediaPlayer.play();
+                                Image image = new Image("Images/trophy.png");
+                                ImageView imageView = new ImageView(image);
+                                imageView.setFitHeight(180);
+                                imageView.setFitWidth(90);
+                                imageView.setPreserveRatio(true);
+                                imageView.setLayoutY(130);
+                                imageView.setLayoutX(490);
+                                ScaleTransition scaleTransition = new ScaleTransition();
+                                scaleTransition.setDuration(Duration.millis(2000));
+                                scaleTransition.setNode(imageView);
+                                scaleTransition.setByY(0.6);
+                                scaleTransition.setByX(0.6);
+                                scaleTransition.setCycleCount(2);
+                                scaleTransition.setAutoReverse(true);
+                                scaleTransition.play();
+                                mainroot.getChildren().add(imageView);
+                            }
                             if(score>9)
                                 text.setX(500);
                             text.setText(""+score);
@@ -796,16 +845,9 @@ public class Game extends Application implements Serializable {
 
         }.start();
 
-        VBox ver2=new VBox(btn3,imageView);
-        ver2.setAlignment(Pos.BOTTOM_CENTER);
-        ver2.setSpacing(3);
-        ver2.setLayoutX(230);
-        ver2.setLayoutY(500);
-        ver.setLayoutX(5);
-        ver.setLayoutY(20);
         //border.setStyle("-fx-background-color: #000000;");
         stage.setTitle("Play Game");
-        Group mainroot = new Group(ver,gridPane,ball,ver2,text,scorestar);
+
         scene.setRoot(mainroot);
         scene.setFill(Color.BLACK);
         stage.setScene(scene);
@@ -918,8 +960,40 @@ public class Game extends Application implements Serializable {
         rotateTransition.setAutoReverse(false);
         rotateTransition.play();
 
-        if(score>=bestScore){
+        if(score>bestScore){
             bestScore=score;
+            Image image = new Image("Images/trophy.png");
+            ImageView imageView = new ImageView(image);
+            imageView.setFitHeight(180);
+            imageView.setFitWidth(90);
+            imageView.setPreserveRatio(true);
+            imageView.setLayoutY(60);
+            imageView.setLayoutX(450);
+            ScaleTransition scaleTransition = new ScaleTransition();
+            scaleTransition.setDuration(Duration.millis(2000));
+            scaleTransition.setNode(imageView);
+            scaleTransition.setByY(0.6);
+            scaleTransition.setByX(0.6);
+            scaleTransition.setCycleCount(Animation.INDEFINITE);
+            scaleTransition.setAutoReverse(true);
+            scaleTransition.play();
+            parent.getChildren().add(imageView);
+            Image image2 = new Image("Images/trophy.png");
+            ImageView imageView2 = new ImageView(image2);
+            imageView2.setFitHeight(180);
+            imageView2.setFitWidth(90);
+            imageView2.setPreserveRatio(true);
+            imageView2.setLayoutY(60);
+            imageView2.setLayoutX(50);
+            ScaleTransition scaleTransition2 = new ScaleTransition();
+            scaleTransition2.setDuration(Duration.millis(2000));
+            scaleTransition2.setNode(imageView2);
+            scaleTransition2.setByY(0.6);
+            scaleTransition2.setByX(0.6);
+            scaleTransition2.setCycleCount(Animation.INDEFINITE);
+            scaleTransition2.setAutoReverse(true);
+            scaleTransition2.play();
+            parent.getChildren().add(imageView2);
         }
         BackgroundImage myBI= new BackgroundImage(new Image("Images/mainbg.jpg",600,660,false,true),
                 BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
