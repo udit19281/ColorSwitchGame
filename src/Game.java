@@ -485,7 +485,7 @@ public class Game extends Application implements Serializable {
         pause.setPreserveRatio(true);
         Button btn1 = new Button();
         btn1.setPrefSize(60, 60);
-        btn1.setStyle("-fx-background-color: black; ");
+        btn1.setStyle("-fx-background-color: transparent; ");
         btn1.setGraphic(pause);
         btn1.setOnAction(e->{
         //    System.out.println("Pause the game");
@@ -498,12 +498,25 @@ public class Game extends Application implements Serializable {
         exit.setFitWidth(60);
         exit.setPreserveRatio(true);
         Button btn2 = new Button();
-        btn2.setStyle("-fx-background-color: black; ");
+        btn2.setStyle("-fx-background-color: transparent; ");
         btn2.setGraphic(exit);
         btn2.setPrefSize(60, 60);
         btn2.setOnAction(e->{
           //  System.out.println("exit");
             ExitGUI(stage,scene);
+        });
+
+        Image imagebackground = new Image("Images/settings.png");
+        ImageView background = new ImageView(imagebackground);
+        background.setFitHeight(60);
+        background.setFitWidth(60);
+        background.setPreserveRatio(true);
+        Button btn4 = new Button();
+        btn4.setStyle("-fx-background-color: transparent; ");
+        btn4.setGraphic(background);
+        btn4.setPrefSize(60, 60);
+        btn4.setOnAction(e->{
+            //  System.out.println("exit");
         });
 
         javafx.scene.shape.Circle ball= player.getBall().getBall();
@@ -523,7 +536,7 @@ public class Game extends Application implements Serializable {
 
         BorderPane border=new BorderPane();
         border.setStyle("-fx-background: black; -fx-border-color: black;");
-        VBox ver=new VBox(btn1,btn2);
+        VBox ver=new VBox(btn1,btn2,btn4);
         ver.setSpacing(10);
         ver.setAlignment(Pos.TOP_LEFT);
         Group switcher= colorswitcher.getObstacle();
@@ -562,7 +575,7 @@ public class Game extends Application implements Serializable {
         btn3.setMinSize(60, 60);
 //        btn1.setStyle("-fx-font-size: 1.5em; ");
         btn3.setStyle("-fx-font-size: 2em;" +
-                "-fx-background-color: #000000;" +
+                "-fx-background-color: transparent;" +
                 "-fx-text-fill:#ffffff;");
         btn3.setGraphic(imageView2);
         btn3.setOnAction(e->{
@@ -703,8 +716,8 @@ public class Game extends Application implements Serializable {
                     catch (Exception ignored) {
                     }
                     if( d.equals(colors[0]) || d.equals(colors[1]) || d.equals(colors[2]) || d2.equals(colors[0]) || d2.equals(colors[1]) || d2.equals(colors[2])) {
-                        stop();
-                        GameScoreGUI(stage,scene);
+                        //stop();
+                        //GameScoreGUI(stage,scene);
                     }
                     if(screenBounds.intersects(star.localToScreen(star.getBoundsInLocal()))) {
                         if(gridPane.getTranslateY()<1890){
@@ -782,7 +795,7 @@ public class Game extends Application implements Serializable {
         }.start();
         stage.setTitle("Play Game");
         scene.setRoot(mainroot);
-        scene.setFill(Color.BLACK);
+        scene.setFill(Color.DARKORANGE);
         stage.setScene(scene);
         stage.show();
     }
