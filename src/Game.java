@@ -24,10 +24,7 @@ import javafx.util.Duration;
 import java.awt.*;
 import java.io.*;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Objects;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 public class Game extends Application implements Serializable {
@@ -45,20 +42,22 @@ public class Game extends Application implements Serializable {
     transient private Star Star;
     transient private ColorSwitcher colorswitcher;
     private int bestScore;
-    private double SaveArray[];
+   // private double SaveArray[];
+    private double[] SaveArray;
+
     public int getBestScore(){
         return this.bestScore;
     }
 
     public Game(){
-        player= new Player(this);
-        Circle=new CircleObstacle();
-        Line=new LineObstacle();
-        Plus=new PlusObstacle();
+        player=Player.getInstance(this);
+        Circle=(CircleObstacle) GameElements.getInstance("CircleObstacle");
+        Line=(LineObstacle) GameElements.getInstance("LineObstacle");
+        Plus=(PlusObstacle) GameElements.getInstance("PlusObstacle");
         IsClicked=false;
-        Square=new SquareObstacle();
-        Star=new Star();
-        colorswitcher= new ColorSwitcher();
+        Square=(SquareObstacle) GameElements.getInstance("SquareObstacle");
+        Star=(Star) GameElements.getInstance("Star");
+        colorswitcher=(ColorSwitcher) GameElements.getInstance("ColorSwitcher");
         bestScore=0;
         SaveArray=new double[5];
     }
@@ -125,8 +124,8 @@ public class Game extends Application implements Serializable {
         btn1.setLayoutY(210);
         btn1.setPrefWidth(200);
         btn1.setStyle(
-                "-fx-border-radius: 57px;" +"-fx-background-color: #000000;"+ "-fx-text-fill: FF0AF2;" + "-fx-font-family: serif;" +
-                        "-fx-font-size: 20px;" + "-fx-font-weight: 200;" + "-fx-padding: 20px;" + "-fx-border-width:0.22em;"+ "-fx-border-color: #ED33E3;");
+                "-fx-border-radius: 57px;" +"-fx-background-color: #000000;"+ "-fx-text-fill: #FF008F;" + "-fx-font-family: serif;" +
+                        "-fx-font-size: 20px;" + "-fx-font-weight: 200;" + "-fx-padding: 20px;" + "-fx-border-width:0.22em;"+ "-fx-border-color: #FF008F;");
         btn1.setOnAction(e->{
             System.out.println("Pressed button 1 in main menu");
             GamePlay(stage,scene,false);
@@ -217,14 +216,11 @@ public class Game extends Application implements Serializable {
                         "-fx-font-size: 20px;" + "-fx-font-weight: 200;" + "-fx-padding: 20px;" + "-fx-border-width:0.22em;"+ "-fx-border-color: #ED33E3;");
         btn1.setLayoutX(190);
         btn1.setLayoutY(230);
-//        btn1.setStyle("-fx-font-size: 1.5em; ");
         btn1.setOnAction(e->{
             System.out.println("Save Game");
-            //Save save=new Save(SaveArray);
             try{
                 serialize();
                 System.out.println("DONE SERIALIZE");
-                //show game saved Succefully
             }
             catch (Exception ignored){
                 System.out.println("ERROR IN SERIALIZE:221");
@@ -241,20 +237,7 @@ public class Game extends Application implements Serializable {
                 "-fx-border-radius: 60px;" +"-fx-background-color: #000000;"+ "-fx-text-fill: cyan;" + "-fx-font-family: serif;" +
                         "-fx-font-size: 20px;" + "-fx-font-weight: 200;" + "-fx-padding: 20px;" + "-fx-border-width:0.22em;"+ "-fx-border-color: cyan;");
         btn2.setOnAction(e->{
-
-            try{
-                serializeResume();
-
-                this.SaveArray=deserializeResume();
-                System.out.println("DONE Resuming");
-                GamePlay(stage,scene,true);
-                //show game saved Succefully
-            }
-            catch (Exception i){
-                System.out.println(i);
-                System.out.println("ERROR at line 256");
-            }
-//            GamePlay(stage,scene,true);
+         ResumeGameTemp(stage, scene);
         });
         parent.getChildren().addAll(btn1,btn2);
         stage.setScene(scene);
@@ -317,7 +300,6 @@ public class Game extends Application implements Serializable {
         File folder = new File("SavedGames/");
         File[] listOfFiles = folder.listFiles();
         Button button;
-        ArrayList<Button> buttonArrayList=new ArrayList<Button>();
         Button btn1 = new Button("Delete All");
         btn1.setLayoutX(220);
         btn1.setLayoutY(200);
@@ -335,6 +317,11 @@ public class Game extends Application implements Serializable {
             MainMenuGUI(stage);
         });
 
+        for (int i = 0; i < Objects.requireNonNull(listOfFiles).length; i++) {
+            if (listOfFiles[i].isFile()) {
+                SavedGameFileName.add(i,listOfFiles[i].getName());}
+        }
+
         Image imageexit = new Image("Images/exit2.png");
         ImageView exit = new ImageView(imageexit);
         exit.setFitHeight(60);
@@ -345,36 +332,33 @@ public class Game extends Application implements Serializable {
         btn2.setGraphic(exit);
         btn2.setPrefSize(60, 60);
         btn2.setOnAction(e->{
-            System.out.println("exit");
+        //    System.out.println("exit");
             MainMenuGUI(stage);
         });
         btn2.setLayoutX(5);
         btn2.setLayoutY(25);
         parent.getChildren().add(btn2);
-
-        for (int i = 0; i < Objects.requireNonNull(listOfFiles).length; i++) {
-            if (listOfFiles[i].isFile()) {
-                SavedGameFileName.add(i,listOfFiles[i].getName());
-                button=new Button(listOfFiles[i].getName());
-                buttonArrayList.add(button);
+    //Iterator Design Pattern
+        Iterator itr= SavedGameFileName.iterator();
+        while(itr.hasNext()){
+            Object obj=itr.next();
+            String s=(String)obj;
+                button=new Button(s);
                 button.setStyle(
                         "-fx-border-radius: 57px;" +"-fx-background-color: #000000;"+ "-fx-text-fill: cyan;" + "-fx-font-family: serif;" +
                                 "-fx-font-size: 20px;" + "-fx-font-weight: 200;" + "-fx-padding: 10px;" + "-fx-border-width:0.07em;"+ "-fx-border-color: cyan;");
-                String FileName=SavedGameFileName.get(i);
-                button.setOnAction(actionEvent -> {
+            button.setOnAction(actionEvent -> {
                     try{
-                        SaveArray=deserialize(FileName);
-                        System.out.println("Done Deserialize");
+                        SaveArray=deserialize(s).SaveArray;
                         GamePlay(stage,scene,true);
                     }
                     catch (Exception err){
                         System.out.println(err);
-                        System.out.println("ERROR IN DESERIALIZE");
                     }
                 });
                 Contents.getChildren().add(button);
             }
-        }
+
         Contents.setSpacing(5);
         Contents.setLayoutX(180);
         Contents.setLayoutY(265);
@@ -439,19 +423,7 @@ public class Game extends Application implements Serializable {
                 "-fx-border-radius: 60px;" +"-fx-background-color: #000000;"+ "-fx-text-fill: yellow;" + "-fx-font-family: serif;" +
                         "-fx-font-size: 20px;" + "-fx-font-weight: 200;" + "-fx-padding: 20px;" + "-fx-border-width:0.22em;"+ "-fx-border-color: yellow;");
         btn1.setOnAction(e->{
-            try{
-                serializeResume();
-                this.SaveArray=deserializeResume();
-                System.out.println("DONE Resuming");
-                GamePlay(stage,scene,true);
-                //show game saved Succefully
-            }
-            catch (Exception i){
-                System.out.println(i);
-                System.out.println("ERROR at line 256");
-            }
-            //      GamePlay(stage,scene,true);
-
+           ResumeGameTemp(stage,scene);
         });
 
         Button btn2 = new Button("Restart");
@@ -464,7 +436,7 @@ public class Game extends Application implements Serializable {
                         "-fx-font-size: 20px;" + "-fx-font-weight: 200;" + "-fx-padding: 20px;" + "-fx-border-width:0.22em;"+ "-fx-border-color: cyan;");
         btn2.setOnAction(e->{
             GamePlay(stage,scene,false);
-            System.out.println("Pressed button 2 in exit menu");
+         //   System.out.println("Pressed button 2 in exit menu");
         });
 
         Button btn3 = new Button("Main Menu");
@@ -476,7 +448,7 @@ public class Game extends Application implements Serializable {
                 "-fx-border-radius: 57px;" +"-fx-background-color: #000000;"+ "-fx-text-fill: FF0AF2;" + "-fx-font-family: serif;" +
                         "-fx-font-size: 20px;" + "-fx-font-weight: 200;" + "-fx-padding: 20px;" + "-fx-border-width:0.22em;"+ "-fx-border-color: #ED33E3;");
         btn3.setOnAction(e->{
-            System.out.println("Pressed button 3 in exit menu");
+        //    System.out.println("Pressed button 3 in exit menu");
             stage.close();
             MainMenuGUI(new Stage());
         });
@@ -486,8 +458,8 @@ public class Game extends Application implements Serializable {
     }
     public void GamePlay (Stage stage,Scene scene,boolean CallFromSave) {
         if(CallFromSave){
-            score=(int)SaveArray[0];
-            bestScore=(int)SaveArray[3];
+            score= (int) SaveArray[0];
+            bestScore=(int) SaveArray[3];
         }
         else {
             score =0;
@@ -516,7 +488,7 @@ public class Game extends Application implements Serializable {
         btn1.setStyle("-fx-background-color: black; ");
         btn1.setGraphic(pause);
         btn1.setOnAction(e->{
-            System.out.println("Pause the game");
+        //    System.out.println("Pause the game");
             PauseGameGUI(stage,scene,SaveArray);
         });
 
@@ -530,7 +502,7 @@ public class Game extends Application implements Serializable {
         btn2.setGraphic(exit);
         btn2.setPrefSize(60, 60);
         btn2.setOnAction(e->{
-            System.out.println("exit");
+          //  System.out.println("exit");
             ExitGUI(stage,scene);
         });
 
@@ -554,7 +526,6 @@ public class Game extends Application implements Serializable {
         VBox ver=new VBox(btn1,btn2);
         ver.setSpacing(10);
         ver.setAlignment(Pos.TOP_LEFT);
-
         Group switcher= colorswitcher.getObstacle();
         Group star = Star.getObstacle();
         GridPane gridPane = new GridPane();
@@ -567,33 +538,26 @@ public class Game extends Application implements Serializable {
         gridPane.setLayoutY(-1920);
         gridPane.setStyle("-fx-background: transparent; -fx-border-color: transparent;");
         gridPane.setAlignment(Pos.CENTER);
-
         Group root = Circle.Big_circle();
         Group root2 = Square.getObstacle();
         Group root3 = Circle.getObstacle();
         Group root4 = Plus.getObstacle();
-        CircleObstacle Circle2=new CircleObstacle();
-
+        CircleObstacle Circle2=(CircleObstacle) GameElements.getInstance("CircleObstacle");
         Group root5= Circle2.getObstacle();
-
         gridPane.add(root3, 0, 0);
         gridPane.add(root, 0, 1);
         gridPane.add(root4, 0, 3);
         gridPane.add(root2, 0, 4);
         gridPane.add(root5, 0, 5);
         gridPane.add(switcher, 0, 2);
-
         GridPane.setHalignment(root, HPos.CENTER);
         GridPane.setHalignment(root3, HPos.CENTER);
         GridPane.setHalignment(root2, HPos.CENTER);
         GridPane.setHalignment(root4, HPos.LEFT);
         GridPane.setHalignment(root5, HPos.CENTER);
         GridPane.setHalignment(switcher, HPos.CENTER);
-
         gridPane.add(star, 0, 5); //column
-
         GridPane.setHalignment(star, HPos.CENTER);
-
         Button btn3 = new Button();
         btn3.setMinSize(60, 60);
 //        btn1.setStyle("-fx-font-size: 1.5em; ");
@@ -612,13 +576,12 @@ public class Game extends Application implements Serializable {
 
         });
         if(CallFromSave){
-            //code
-            score=(int)SaveArray[0];
+            score=(int) SaveArray[0];
             gridPane.setTranslateY(SaveArray[2]);
             ball.setTranslateY(SaveArray[1]);
-            bestScore=(int)SaveArray[3];
-            pos_star= (int)SaveArray[4];
-            System.out.println("Updated pos_star: "+pos_star);
+            bestScore=(int) SaveArray[3];
+            pos_star= (int) SaveArray[4];
+       //     System.out.println("Updated pos_star: "+pos_star);
             IsClicked=false;
             gridPane.getChildren().remove(star);
             gridPane.add(star, 0, pos_star);
@@ -632,7 +595,7 @@ public class Game extends Application implements Serializable {
             @Override
             public void handle(MouseEvent e) {
 
-                System.out.println(Circle.getRotation());
+         //       System.out.println(Circle.getRotation());
                 oldtime = System.currentTimeMillis();
                 if(ball.getTranslateY()>-100) {
                     TranslateTransition translateTransition = new TranslateTransition();
@@ -648,7 +611,6 @@ public class Game extends Application implements Serializable {
             }
         };
         btn3.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
-
         VBox ver2=new VBox(btn3,imageView);
         ver2.setAlignment(Pos.BOTTOM_CENTER);
         ver2.setSpacing(3);
@@ -657,20 +619,15 @@ public class Game extends Application implements Serializable {
         ver.setLayoutX(5);
         ver.setLayoutY(20);
         Group mainroot = new Group(ver,gridPane,ball,ver2,text,scorestar);
-
         new AnimationTimer() {
             @Override
             public void handle(long now) {
-                // System.out.println("GRID HEIGHT: "+gridPane.getTranslateY());
                 if(btn3.isPressed()){
-
-                 //   System.out.println("Button clicked 1");
                     IsClicked=true;
                 }
                 if(System.currentTimeMillis()-oldtime>=200 && IsClicked)
                 {
-                    if(ball.getTranslateY()<=-25)
-                    {
+                    if(ball.getTranslateY()<=-25) {
                         TranslateTransition translateTransition = new TranslateTransition();
                         translateTransition.setDuration(Duration.millis(100));
                         translateTransition.setNode(ball);
@@ -700,9 +657,7 @@ public class Game extends Application implements Serializable {
                     else{
                         gridPane.add(switcher, 0, 2);
                     }
-
                 }
-
             }
         }.start();
 
@@ -712,35 +667,26 @@ public class Game extends Application implements Serializable {
         colors[2]= java.awt.Color.CYAN;
 
         new AnimationTimer() {
-    int count=0;
             @Override
             public void handle(long now) {
-                if(score%5==0 && score!=0){
-                    count++;
-                }
                 if (btn1.isPressed()) {
-
-                    System.out.println("HERE");
-                    //sleep(5000);
-                    SaveArray[0] = score;
-                    SaveArray[1] = ball.getTranslateY();
-                    SaveArray[2] = gridPane.getTranslateY();
-                    SaveArray[3] = bestScore;
-                    SaveArray[4]= GridPane.getRowIndex(star);
-                    System.out.println("Star Pos:"+SaveArray[4]);
+                    SaveArray[0]= (double)score;
+                    SaveArray[1]= ball.getTranslateY();
+                    SaveArray[2]= gridPane.getTranslateY();
+                    SaveArray[3]= (double)bestScore;
+                    SaveArray[4]= (double)GridPane.getRowIndex(star);
+               //     System.out.println("Star Pos:"+ SaveArray[4]);
                     stop();
-                    //MainMenuGUI(stage);
                     PauseGameGUI(stage, scene, SaveArray);
                 } else if (btn2.isPressed()) {
-                    SaveArray[0] = score;
-                    SaveArray[1] = ball.getTranslateY();
-                    SaveArray[2] = gridPane.getTranslateY();
-                    SaveArray[3] = bestScore;
-                    SaveArray[4]= GridPane.getRowIndex(star);
-                    System.out.println("EXIT");
+                    SaveArray[0]= (double)score;
+                    SaveArray[1]= ball.getTranslateY();
+                    SaveArray[2]= gridPane.getTranslateY();
+                    SaveArray[3]= (double)bestScore;
+                    SaveArray[4]= (double)GridPane.getRowIndex(star);
+             //       System.out.println("EXIT");
                     stop();
                 }
-
                 else{
                     Bounds bounds = ball.getBoundsInLocal();
                     Bounds screenBounds = ball.localToScreen(bounds);
@@ -749,23 +695,18 @@ public class Game extends Application implements Serializable {
                     int y3= (int) screenBounds.getMaxY()+1;
                     java.awt.Color d = null;
                     java.awt.Color d2 = null;
-                  //  System.out.println("end101");
                     try {
                         Robot r = new Robot();
                         d = r.getPixelColor(x,y2 );
                         d2 = r.getPixelColor(x,y3 );
-                       //  System.out.println("d2"+d2);
                     }
-                    catch (Exception evt) {
-                        // System.err.println(evt.getMessage());
+                    catch (Exception ignored) {
                     }
-                    if( d.equals(colors[0]) || d.equals(colors[1]) || d.equals(colors[2]) || d2.equals(colors[0]) || d2.equals(colors[1]) || d2.equals(colors[2]))
-                    {
+                    if( d.equals(colors[0]) || d.equals(colors[1]) || d.equals(colors[2]) || d2.equals(colors[0]) || d2.equals(colors[1]) || d2.equals(colors[2])) {
                         stop();
                         GameScoreGUI(stage,scene);
                     }
-                    if(screenBounds.intersects(star.localToScreen(star.getBoundsInLocal())))
-                    {
+                    if(screenBounds.intersects(star.localToScreen(star.getBoundsInLocal()))) {
                         if(gridPane.getTranslateY()<1890){
                             gridPane.getChildren().remove(star);
                             score++;
@@ -812,7 +753,6 @@ public class Game extends Application implements Serializable {
                             mediaPlayer.setAutoPlay(true);
                             mediaPlayer.play();
                             if(((score%5)==0)  && (score!=0)){
-                                System.out.println("SPEED increased");
                                 Duration dur1=Circle.getRotation();
                                 Circle.SetRotation(dur1.subtract(Duration.millis(100)));
                                 Duration dur2=Circle.getRotation2();
@@ -824,11 +764,9 @@ public class Game extends Application implements Serializable {
                                 Duration dur5=Square.getRotation();
                                 Square.SetRotation(dur5.subtract(Duration.millis(140)));
                             }
-
                         }
                     }
-                    else if(screenBounds.intersects(switcher.localToScreen(switcher.getBoundsInLocal())))
-                    {
+                    else if(screenBounds.intersects(switcher.localToScreen(switcher.getBoundsInLocal()))) {
                         gridPane.getChildren().remove(switcher);
                         Random rand = new Random();
                         int random = rand.nextInt(3);
@@ -840,36 +778,22 @@ public class Game extends Application implements Serializable {
                         ball.setFill(awtToJavaFX(awt2));
                     }
                 }
-
             }
-
         }.start();
-
-        //border.setStyle("-fx-background-color: #000000;");
         stage.setTitle("Play Game");
-
         scene.setRoot(mainroot);
         scene.setFill(Color.BLACK);
         stage.setScene(scene);
         stage.show();
-
     }
     public Color awtToJavaFX(java.awt.Color c) {
         return javafx.scene.paint.Color.rgb(c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha() / 255.0);
     }
-    public java.awt.Color toawt(Color fx)
-    {
+    public java.awt.Color toawt(Color fx) {
         java.awt.Color awtColor = new java.awt.Color((float) fx.getRed(),(float) fx.getGreen(), (float) fx.getBlue(), (float) fx.getOpacity());
         return awtColor;
     }
-//    public void Moveball(GridPane gridPane) {
-//        TranslateTransition translateTransition = new TranslateTransition();
-//        translateTransition.setDuration(Duration.millis(150));
-//        translateTransition.setNode(gridPane);
-//        translateTransition.setByY(35);
-//        translateTransition.play();
-//    }
-    public double[] deserialize(String fileName) throws IOException,ClassNotFoundException {
+    public Game deserialize(String fileName) throws IOException,ClassNotFoundException {
 
         ObjectInputStream in = null;
         Game retrieve=null;
@@ -880,9 +804,9 @@ public class Game extends Application implements Serializable {
             assert in != null;
             in.close();
         }
-        return retrieve.SaveArray;
+        return retrieve;
     }
-    public double[] deserializeResume() throws IOException,ClassNotFoundException {
+    public Game deserializeResume() throws IOException,ClassNotFoundException {
 
         ObjectInputStream in = null;
         Game retrieve=null;
@@ -893,7 +817,7 @@ public class Game extends Application implements Serializable {
             assert in != null;
             in.close();
         }
-        return retrieve.SaveArray;
+        return retrieve;
     }
     public void serializeResume() throws IOException {
         String file = ("Music/temp.txt") ;
@@ -906,7 +830,6 @@ public class Game extends Application implements Serializable {
             out.close();
         }
     }
-
     public void serialize() throws IOException {
         Date date = new Date() ;
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy, HH-mm-ss") ;
@@ -1012,8 +935,8 @@ public class Game extends Application implements Serializable {
         text2.setY(280);
         parent.getChildren().addAll(text,text2);
         Button btn4=null;
-        if(bestScore>=5){
-            System.out.println("Continue");
+        if(bestScore>=5 && score>=5){
+         //   System.out.println("Continue");
             btn4 = new Button("Continue Game");
             btn4.setMinSize(150, 25);
             btn4.setLayoutX(200);
@@ -1033,23 +956,23 @@ public class Game extends Application implements Serializable {
                 "-fx-border-radius: 57px;" +"-fx-background-color: #000000;"+ "-fx-text-fill: #00FFCF;" + "-fx-font-family: serif;" +
                         "-fx-font-size: 20px;" + "-fx-font-weight: 200;" + "-fx-padding: 20px;" + "-fx-border-width:0.22em;"+ "-fx-border-color: #00FFCF;");
         btn3.setOnAction(e->{
-            System.out.println("Pressed button 3 in exit menu");
+         //   System.out.println("Pressed button 3 in exit menu");
            // stage.close();
             MainMenuGUI(stage);
         });
-        if(btn4!=null){
+        if(btn4!=null && score>=5){
             btn4.setOnAction(e->{
-                SaveArray[0]=score-5;
+                SaveArray[0]= (double) (score - 5);
                 try{
                     serializeResume();
-                    this.SaveArray=deserializeResume();
-                    System.out.println("DONE Resuming");
+                    this.SaveArray=deserializeResume().SaveArray;
+                //    System.out.println("DONE Resuming");
                     GamePlay(stage,scene,true);
                     //show game saved Succefully
                 }
                 catch (Exception i){
                     System.out.println(i);
-                    System.out.println("ERROR at line 959");
+                  //  System.out.println("ERROR at line 959");
                 }
 
             });
@@ -1062,4 +985,16 @@ public class Game extends Application implements Serializable {
         stage.show();
 
     }
+    //Template Design Pattern
+    public final void ResumeGameTemp(Stage stage,Scene scene){
+        try{
+            serializeResume();
+            this.SaveArray=deserializeResume().SaveArray;
+            GamePlay(stage,scene,true);
+        }
+        catch (Exception i){
+            System.out.println(i);
+        }
+    }
+
 }

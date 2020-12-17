@@ -18,12 +18,34 @@ public abstract class GameElements {
         return this.position;
     }
     public abstract Group getObstacle();
+    //Factory Design Pattern
+    public static GameElements getInstance(String name){
+        switch (name) {
+            case "Ball":
+                return new Ball();
+            case "LineObstacle":
+                return new LineObstacle();
+            case "ColorSwitcher":
+                return new ColorSwitcher();
+            case "Obstacle":
+                return new Obstacle();
+            case "Star":
+                return new Star();
+            case "SquareObstacle":
+                return new SquareObstacle();
+            case "CircleObstacle":
+                return new CircleObstacle();
+            case "PlusObstacle":
+                return new PlusObstacle();
+        }
+        return null;
+    }
+
 }
 class Ball extends GameElements{
     private Color color;
     private javafx.scene.shape.Circle ball;
-    public Ball()
-    {
+    public Ball() {
         ball=new Circle();
         ball.setRadius(12);
         ball.setLayoutX(300);
@@ -70,7 +92,6 @@ class Star extends GameElements{
     }
 
 }
-
 class ColorSwitcher extends GameElements{
     @Override
     public Group getObstacle() {
@@ -83,8 +104,6 @@ class ColorSwitcher extends GameElements{
         return root;
     }
 }
-
-
 class Obstacle extends GameElements{
     private String type_of_obstacle;
 
@@ -138,7 +157,6 @@ class CircleObstacle extends Obstacle{
     private RotateTransition rotateTransition=null;
     private RotateTransition rotateTransition2=null;
     private RotateTransition rotateTransition3=null;
-
 
     @Override
     public Group getObstacle() {
@@ -345,12 +363,12 @@ class CircleObstacle extends Obstacle{
         return root3;
     }
     public void SetRotation(Duration time){
-        System.out.println("Duration updated:" + time);
+      //  System.out.println("Duration updated:" + time);
         if(time.compareTo(Duration.millis(500))>0){
             rotateTransition.stop();
             this.rotateTransition.setDuration(time);
             rotateTransition.play();
-            System.out.println("SET Duration:"+time+" and"+this.rotateTransition.getDuration());
+           // System.out.println("SET Duration:"+time+" and"+this.rotateTransition.getDuration());
         }
     }
     public Duration getRotation(){
@@ -365,7 +383,7 @@ class CircleObstacle extends Obstacle{
             this.rotateTransition3.setDuration(time);
             rotateTransition2.play();
             rotateTransition3.play();
-            System.out.println("SET Duration:"+time+" and"+this.rotateTransition2.getDuration());
+         //   System.out.println("SET Duration:"+time+" and"+this.rotateTransition2.getDuration());
         }
     }
     public Duration getRotation2(){
@@ -376,12 +394,12 @@ class SquareObstacle extends Obstacle{
 
     private RotateTransition rotateTransition;
     public void SetRotation(Duration time){
-        System.out.println("Duration updated:" + time);
+     //   System.out.println("Duration updated:" + time);
         if(time.compareTo(Duration.millis(500))>0){
             rotateTransition.stop();
             this.rotateTransition.setDuration(time);
             rotateTransition.play();
-            System.out.println("SET Duration:"+time+" and"+this.rotateTransition.getDuration());
+     //       System.out.println("SET Duration:"+time+" and"+this.rotateTransition.getDuration());
         }
     }
 
@@ -431,16 +449,15 @@ class SquareObstacle extends Obstacle{
         return root;
     }
 }
-
 class PlusObstacle extends Obstacle{
     private RotateTransition rotateTransition;
     public void SetRotation(Duration time){
-        System.out.println("Duration updated:" + time);
+     //   System.out.println("Duration updated:" + time);
         if(time.compareTo(Duration.millis(500))>0){
             rotateTransition.stop();
             this.rotateTransition.setDuration(time);
             rotateTransition.play();
-            System.out.println("SET Duration:"+time+" and"+this.rotateTransition.getDuration());
+        //    System.out.println("SET Duration:"+time+" and"+this.rotateTransition.getDuration());
         }
     }
 

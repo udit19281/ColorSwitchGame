@@ -6,13 +6,29 @@ import java.io.Serializable;
 
 public class Player implements Serializable {
     private Game currentGame;
-    private int totalStars;
     private Ball ball;
-    public Player(Game game)
+    private int totalStars;
+    private static Player instance;
+    //Singleton Design pattern
+    private Player(Game game)
     {
         this.currentGame= game;
         this.ball = new Ball();
         this.totalStars = 0;
+        this.totalStars= currentGame.getBestScore();
+    }
+    public static Player getInstance(Game game){
+        if(instance==null){
+            instance=new Player(game);
+        }
+        return instance;
+    }
+    public int getTotalStars(){
+        return totalStars;
+    }
+
+    public void setTotalStars(int totalStars) {
+        this.totalStars = totalStars;
     }
 
     public Ball getBall() {
