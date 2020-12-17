@@ -153,7 +153,7 @@ public class Game extends Application implements Serializable {
                 "-fx-border-radius: 60px;" +"-fx-background-color: #000000;"+ "-fx-text-fill: yellow;" + "-fx-font-family: serif;" +
                         "-fx-font-size: 20px;" + "-fx-font-weight: 200;" + "-fx-padding: 20px;" + "-fx-border-width:0.22em;"+ "-fx-border-color: yellow;");
         btn3.setOnAction(e->{
-            System.out.println("Pressed button 3 in main menu");
+     //       System.out.println("Pressed button 3 in main menu");
             Platform.exit();
         });
 
@@ -217,10 +217,10 @@ public class Game extends Application implements Serializable {
         btn1.setLayoutX(190);
         btn1.setLayoutY(230);
         btn1.setOnAction(e->{
-            System.out.println("Save Game");
+          //  System.out.println("Save Game");
             try{
                 serialize();
-                System.out.println("DONE SERIALIZE");
+            //    System.out.println("DONE SERIALIZE");
             }
             catch (Exception ignored){
                 System.out.println("ERROR IN SERIALIZE:221");
@@ -620,7 +620,18 @@ public class Game extends Application implements Serializable {
             pos_star= GridPane.getRowIndex(star);
         }
         oldtime = System.currentTimeMillis();
-
+        int best=0;
+        try{
+           // serializeBestScore(bestScore);
+           best =deserializeBestScore();
+        }
+        catch (Exception i){
+            System.out.println(i);
+        }
+        if(best>=bestScore){
+            System.out.println("BEST SCORE UPDATED: "+best);
+            bestScore=best;
+        }
         EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent e) {
@@ -860,6 +871,29 @@ public class Game extends Application implements Serializable {
             out.close();
         }
     }
+    public int deserializeBestScore() throws IOException,ClassNotFoundException {
+        ObjectInputStream in = null;
+        int score=0;
+        try {
+            in = new ObjectInputStream (new FileInputStream("Music/temp2.txt"));
+            score= (int) in.readObject();
+        } finally {
+            assert in != null;
+            in.close();
+        }
+        return score;
+    }
+    public void serializeBestScore(int score) throws IOException {
+        String file = ("Music/temp2.txt") ;
+        ObjectOutputStream out = null;
+        try {
+            out = new ObjectOutputStream (new FileOutputStream(file));
+            out.writeObject(score);
+        } finally {
+            assert out != null;
+            out.close();
+        }
+    }
     public void serialize() throws IOException {
         Date date = new Date() ;
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy, HH-mm-ss") ;
@@ -914,7 +948,15 @@ public class Game extends Application implements Serializable {
         rotateTransition.play();
 
         if(score>bestScore){
+
             bestScore=score;
+            try{
+                serializeBestScore(bestScore);
+                //this.bestScore=deserializeBestScore();
+            }
+            catch (Exception i){
+                System.out.println(i);
+            }
             Image image = new Image("Images/trophy.png");
             ImageView imageView = new ImageView(image);
             imageView.setFitHeight(180);
