@@ -515,9 +515,6 @@ public class Game extends Application implements Serializable {
         btn4.setStyle("-fx-background-color: transparent; ");
         btn4.setGraphic(background);
         btn4.setPrefSize(60, 60);
-        btn4.setOnAction(e->{
-            //  System.out.println("exit");
-        });
 
         javafx.scene.shape.Circle ball= player.getBall().getBall();
         ball.setFill(Color.YELLOW);
@@ -588,6 +585,26 @@ public class Game extends Application implements Serializable {
             mediaPlayer.play();
 
         });
+        scene.setFill(Color.BLACK);
+        ArrayList<Color> bgcolor=new ArrayList<Color>();
+        bgcolor.add(Color.DARKBLUE);
+        bgcolor.add(Color.DARKORANGE);
+        bgcolor.add(Color.DARKCYAN);
+        bgcolor.add(Color.DARKGOLDENROD);
+        bgcolor.add(Color.DARKRED);
+        bgcolor.add(Color.DARKGREEN);
+        bgcolor.add(Color.DARKVIOLET);
+        bgcolor.add(Color.DARKMAGENTA);
+        bgcolor.add(Color.DARKOLIVEGREEN);
+        bgcolor.add(Color.BLACK);
+
+        btn4.setOnAction(e->{
+            int rand=(int)(Math.random()*10);
+            if(rand<=bgcolor.size())
+            scene.setFill(bgcolor.get(rand));
+            //  System.out.println("exit");
+        });
+
         if(CallFromSave){
             score=(int) SaveArray[0];
             gridPane.setTranslateY(SaveArray[2]);
@@ -716,8 +733,8 @@ public class Game extends Application implements Serializable {
                     catch (Exception ignored) {
                     }
                     if( d.equals(colors[0]) || d.equals(colors[1]) || d.equals(colors[2]) || d2.equals(colors[0]) || d2.equals(colors[1]) || d2.equals(colors[2])) {
-                        //stop();
-                        //GameScoreGUI(stage,scene);
+                        stop();
+                        GameScoreGUI(stage,scene);
                     }
                     if(screenBounds.intersects(star.localToScreen(star.getBoundsInLocal()))) {
                         if(gridPane.getTranslateY()<1890){
@@ -795,7 +812,7 @@ public class Game extends Application implements Serializable {
         }.start();
         stage.setTitle("Play Game");
         scene.setRoot(mainroot);
-        scene.setFill(Color.DARKORANGE);
+
         stage.setScene(scene);
         stage.show();
     }
